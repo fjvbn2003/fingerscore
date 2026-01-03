@@ -1,0 +1,28 @@
+# Common
+.DS_Store
+.vscode/
+
+# Arduino/Firmware
+build/
+*.hex
+*.bin
+*.zip
+
+# Android
+.gradle/
+build/
+captures/
+local.properties
+.externalNativeBuild
+.cxx
+*.apk
+*.aar
+*.jks
+*.keystore
+
+# Kotlin/JVM
+bin/
+*.class
+
+# Logs
+*.log
