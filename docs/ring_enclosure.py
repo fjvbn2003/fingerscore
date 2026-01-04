@@ -71,12 +71,12 @@ result = result.cut(
     .box(cavity_w, cavity_l, cavity_h)
 )
 
-# Button Holes
+# Button Holes (Centered vertically)
 for side in [-1, 1]:
     result = result.cut(
         cq.Workplane("YZ")
         .workplane(offset=housing_w/2)
-        .center(side * housing_l/4, housing_center_z - housing_h/2 + 3.5)
+        .center(side * housing_l/4, housing_center_z)
         .circle(button_hole_d/2)
         .extrude(10, both=True)
     )
@@ -84,23 +84,87 @@ for side in [-1, 1]:
 # USB Port
 result = result.cut(
     cq.Workplane("XY")
-    .workplane(offset=housing_center_z + 6)
+    .workplane(offset=housing_center_z + 4.5)
     .center(0, housing_l/2)
-    .box(14, 10, 8)
+    .box(10, 8, 4.5) # Made slightly tighter for better fit
 )
 
-# 5. Lid
+# 5. Internal Supports
+# Support pillars for XIAO (approx 21x17.5mm)
+pillar_h = 2.0
+pillar_w = 2.0
+pillar_pos_x = 17.5 / 2
+pillar_pos_y = 21.0 / 2
+for x_side in [-1, 1]:
+    for y_side in [-1, 1]:
+        pillar = (
+            cq.Workplane("XY")
+            .workplane(offset=housing_center_z - housing_h/2 + 1.2)
+            .center(x_side * pillar_pos_x, y_side * pillar_pos_y)
+            .box(pillar_w, pillar_w, pillar_h, centered=(True, True, False))
+        )
+        result = result.union(pillar)
+
+# Switch supports (small ribs near holes)
+rib_w = 1.0
+rib_l = 4.0
+rib_h = 3.0
+for side in [-1, 1]:
+    for y_off in [-1, 1]:
+        rib = (
+            cq.Workplane("XY")
+            .workplane(offset=housing_center_z - housing_h/2 + 1.2)
+            .center(side * (housing_w/2 - 2), side * housing_l/4 + y_off * 3)
+            .box(2, rib_w, rib_h, centered=(True, True, False))
+        )
+        result = result.union(rib)
+
+# 6. Snap-fit Dimples (Small indentations in housing)
+snap_r = 0.6
+for y_pos in [-housing_l/3, housing_l/3]:
+    result = result.cut(
+        cq.Workplane("YZ")
+        .workplane(offset=housing_w/2 - 0.5)
+        .center(y_pos, housing_center_z + housing_h/2 - 1.5)
+        .sphere(snap_r)
+    )
+    result = result.cut(
+        cq.Workplane("YZ")
+        .workplane(offset=-housing_w/2 + 0.5)
+        .center(y_pos, housing_center_z + housing_h/2 - 1.5)
+        .sphere(snap_r)
+    )
+
+# 7. Lid Improvements
 lid = (
     cq.Workplane("XY")
     .box(housing_w, housing_l, wall_thickness)
     .edges("|Z")
     .fillet(rounding_r)
 )
-lid = lid.union(
+lid_insert = (
     cq.Workplane("XY")
-    .workplane(offset=-wall_thickness/2 - 1.1)
-    .box(housing_w - wall_thickness - clearance, housing_l - wall_thickness - clearance, 2.2)
+    .workplane(offset=-wall_thickness/2 - 0.8)
+    .box(housing_w - wall_thickness*2 - clearance, housing_l - wall_thickness*2 - clearance, 1.6)
 )
+
+# Snap-fit Bumps on lid insert
+for y_pos in [-housing_l/3, housing_l/3]:
+    lid_insert = lid_insert.union(
+        cq.Workplane("XY")
+        .workplane(offset=-wall_thickness/2 - 0.8)
+        .center(housing_w/2 - wall_thickness - clearance/2, y_pos)
+        .sphere(snap_r + 0.1)
+    )
+    lid_insert = lid_insert.union(
+        cq.Workplane("XY")
+        .workplane(offset=-wall_thickness/2 - 0.8)
+        .center(-housing_w/2 + wall_thickness + clearance/2, y_pos)
+        .sphere(snap_r + 0.1)
+    )
+
+lid = lid.union(lid_insert)
+
 lid = lid.cut(
     cq.Workplane("XY")
     .center(2, 0)
