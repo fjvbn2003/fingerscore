@@ -4,54 +4,205 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212"
+    android:background="#0F0F0F"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
+    <!-- Sport Selector -->
+    <LinearLayout
+        android:id="@+id/layoutSports"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="FINGER SCORE"
-        android:textColor="#FFFFFF"
-        android:textSize="34sp"
-        android:textStyle="bold"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/btnTableTennis"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Table Tennis"
+            android:textColor="#00E676" />
+
+        <Button
+            android:id="@+id/btnTennis"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Tennis"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnBadminton"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Badminton"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/dividerCenter"
+        android:layout_width="2dp"
+        android:layout_height="0dp"
+        android:background="#33FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/layoutSports" />
+
+    <!-- Team A (Left) -->
+    <TextView
+        android:id="@+id/tvTeamALabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="TEAM A"
+        android:textColor="#00E676"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/dividerCenter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutSports" />
 
     <TextView
-        android:id="@+id/tvScore"
+        android:id="@+id/tvScoreA"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0"
-        android:textColor="#00E676"
+        android:textColor="#FFFFFF"
         android:textSize="120sp"
-        android:fontFamily="sans-serif-condensed"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:fontFamily="sans-serif-condensed-light"
+        app:layout_constraintBottom_toTopOf="@+id/layoutControlsA"
+        app:layout_constraintEnd_toStartOf="@+id/dividerCenter"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+        app:layout_constraintTop_toBottomOf="@id/tvTeamALabel" />
+
+    <LinearLayout
+        android:id="@+id/layoutControlsA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="48dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnPairA"
+        app:layout_constraintEnd_toStartOf="@+id/dividerCenter"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnMinusA"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_revert"
+            android:tint="#CCFF5252" />
+
+        <ImageButton
+            android:id="@+id/plusOneA"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginStart="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_input_add"
+            android:tint="#CC00E676" />
+    </LinearLayout>
 
     <Button
-        android:id="@+id/btnReset"
-        android:layout_width="wrap_content"
+        android:id="@+id/btnPairA"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:text="RESET SCORE"
-        android:backgroundTint="#FF5252"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:text="PAIR RING A"
+        android:textSize="12sp"
+        android:backgroundTint="#2C2C2C"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/dividerCenter"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Team B (Right) -->
     <TextView
-        android:id="@+id/tvStatus"
+        android:id="@+id/tvTeamBLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="Scanning for rings..."
-        android:textColor="#BBBBBB"
-        app:layout_constraintBottom_toTopOf="@+id/btnReset"
+        android:layout_marginTop="24dp"
+        android:text="TEAM B"
+        android:textColor="#2979FF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dividerCenter"
+        app:layout_constraintTop_toBottomOf="@id/layoutSports" />
+
+    <TextView
+        android:id="@+id/tvScoreB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textColor="#FFFFFF"
+        android:textSize="120sp"
+        android:fontFamily="sans-serif-condensed-light"
+        app:layout_constraintBottom_toTopOf="@+id/layoutControlsB"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dividerCenter"
+        app:layout_constraintTop_toBottomOf="@id/tvTeamBLabel" />
+
+    <LinearLayout
+        android:id="@+id/layoutControlsB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="48dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnPairB"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dividerCenter">
+
+        <ImageButton
+            android:id="@+id/btnMinusB"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_revert"
+            android:tint="#CCFF5252" />
+
+        <ImageButton
+            android:id="@+id/plusOneB"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginStart="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_input_add"
+            android:tint="#CC2979FF" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnPairB"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:text="PAIR RING B"
+        android:textSize="12sp"
+        android:backgroundTint="#2C2C2C"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dividerCenter" />
+
+    <TextView
+        android:id="@+id/tvGlobalStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Ready"
+        android:textColor="#55FFFFFF"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toTopOf="@id/dividerCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
