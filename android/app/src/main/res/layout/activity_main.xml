@@ -1,21 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0F0F0F"
-    tools:context=".MainActivity">
+    android:background="@color/bg_dark"
+    android:padding="16dp">
 
-    <!-- Sport Selector -->
+    <!-- Global Header -->
     <LinearLayout
-        android:id="@+id/layoutSports"
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="8dp"
-        android:gravity="center"
+        android:gravity="center_vertical"
         app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvGlobalStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/connecting"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp" />
+
+        <ImageButton
+            android:id="@+id/btnResetAll"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_rotate"
+            android:tint="@color/accent_red" />
+    </LinearLayout>
+
+    <!-- Sport Selectors -->
+    <LinearLayout
+        android:id="@+id/sportSelector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/glass_bg"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/header">
 
         <Button
             android:id="@+id/btnTableTennis"
@@ -23,8 +50,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Table Tennis"
-            android:textColor="#00E676" />
+            android:text="@string/table_tennis"
+            android:textColor="@color/accent_green" />
 
         <Button
             android:id="@+id/btnTennis"
@@ -32,8 +59,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Tennis"
-            android:textColor="#FFFFFF" />
+            android:text="@string/tennis"
+            android:textColor="@color/text_secondary" />
 
         <Button
             android:id="@+id/btnBadminton"
@@ -41,169 +68,190 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Badminton"
-            android:textColor="#FFFFFF" />
+            android:text="@string/badminton"
+            android:textColor="@color/text_secondary" />
     </LinearLayout>
 
-    <View
-        android:id="@+id/dividerCenter"
-        android:layout_width="2dp"
+    <!-- Scoreboard Area -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#33FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layoutSports" />
-
-    <!-- Team A (Left) -->
-    <TextView
-        android:id="@+id/tvTeamALabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="TEAM A"
-        android:textColor="#00E676"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/dividerCenter"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layoutSports" />
-
-    <TextView
-        android:id="@+id/tvScoreA"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0"
-        android:textColor="#FFFFFF"
-        android:textSize="120sp"
-        android:fontFamily="sans-serif-condensed-light"
-        app:layout_constraintBottom_toTopOf="@+id/layoutControlsA"
-        app:layout_constraintEnd_toStartOf="@+id/dividerCenter"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTeamALabel" />
-
-    <LinearLayout
-        android:id="@+id/layoutControlsA"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:orientation="horizontal"
-        android:layout_marginBottom="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnPairA"
-        app:layout_constraintEnd_toStartOf="@+id/dividerCenter"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintBottom_toTopOf="@id/pairingArea"
+        app:layout_constraintTop_toBottomOf="@id/sportSelector">
 
-        <ImageButton
-            android:id="@+id/btnMinusA"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_menu_revert"
-            android:tint="#CCFF5252" />
+        <!-- Team A -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/glass_bg"
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/plusOneA"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_marginStart="16dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_input_add"
-            android:tint="#CC00E676" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/team_a"
+                android:textColor="@color/accent_green"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvScoreA"
+                style="@style/ScoreDigit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sets"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/tvSetsA"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:orientation="horizontal">
+                <ImageButton
+                    android:id="@+id/btnMinusA"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/glass_bg"
+                    android:src="@android:drawable/ic_input_delete"
+                    android:tint="@color/white" />
+                <ImageButton
+                    android:id="@+id/plusOneA"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="16dp"
+                    android:background="@drawable/glass_bg"
+                    android:src="@android:drawable/ic_input_add"
+                    android:tint="@color/accent_green" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Team B -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/glass_bg"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/team_b"
+                android:textColor="@color/accent_blue"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvScoreB"
+                style="@style/ScoreDigit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sets"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/tvSetsB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:orientation="horizontal">
+                <ImageButton
+                    android:id="@+id/btnMinusB"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/glass_bg"
+                    android:src="@android:drawable/ic_input_delete"
+                    android:tint="@color/white" />
+                <ImageButton
+                    android:id="@+id/plusOneB"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="16dp"
+                    android:background="@drawable/glass_bg"
+                    android:src="@android:drawable/ic_input_add"
+                    android:tint="@color/accent_blue" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btnPairA"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="24dp"
-        android:text="PAIR RING A"
-        android:textSize="12sp"
-        android:backgroundTint="#2C2C2C"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/dividerCenter"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <!-- Team B (Right) -->
-    <TextView
-        android:id="@+id/tvTeamBLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="TEAM B"
-        android:textColor="#2979FF"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/dividerCenter"
-        app:layout_constraintTop_toBottomOf="@id/layoutSports" />
-
-    <TextView
-        android:id="@+id/tvScoreB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0"
-        android:textColor="#FFFFFF"
-        android:textSize="120sp"
-        android:fontFamily="sans-serif-condensed-light"
-        app:layout_constraintBottom_toTopOf="@+id/layoutControlsB"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/dividerCenter"
-        app:layout_constraintTop_toBottomOf="@id/tvTeamBLabel" />
-
+    <!-- Pairing Area -->
     <LinearLayout
-        android:id="@+id/layoutControlsB"
-        android:layout_width="wrap_content"
+        android:id="@+id/pairingArea"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:orientation="horizontal"
-        android:layout_marginBottom="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnPairB"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/dividerCenter">
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <ImageButton
-            android:id="@+id/btnMinusB"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_menu_revert"
-            android:tint="#CCFF5252" />
+        <Button
+            android:id="@+id/btnPairA"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/glass_white"
+            android:text="@string/pair_ring_a"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
 
-        <ImageButton
-            android:id="@+id/plusOneB"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_marginStart="16dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_input_add"
-            android:tint="#CC2979FF" />
+        <Button
+            android:id="@+id/btnPairB"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="@color/glass_white"
+            android:text="@string/pair_ring_b"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btnPairB"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="24dp"
-        android:text="PAIR RING B"
-        android:textSize="12sp"
-        android:backgroundTint="#2C2C2C"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/dividerCenter" />
-
-    <TextView
-        android:id="@+id/tvGlobalStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="Ready"
-        android:textColor="#55FFFFFF"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toTopOf="@id/dividerCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

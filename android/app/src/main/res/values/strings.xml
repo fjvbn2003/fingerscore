@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Finger Score</string>
+    <string name="pair_ring_a">PAIR RING A</string>
+    <string name="pair_ring_b">PAIR RING B</string>
+    <string name="connected">Connected</string>
+    <string name="connecting">Connecting...</string>
+    <string name="score_reset">Score Reset</string>
+    <string name="team_a">TEAM A</string>
+    <string name="team_b">TEAM B</string>
+    <string name="sets">SETS</string>
+    <string name="table_tennis">Table Tennis</string>
+    <string name="tennis">Tennis</string>
+    <string name="badminton">Badminton</string>
+    <string name="scanning">Scanning for 10s...</string>
+    <string name="scan_failed">Scan Failed: %1$d</string>
+    <string name="no_devices">No devices found</string>
+    <string name="unknown_device">Unknown Device</string>
+    <string name="select_ring">Pair Ring for team %1$s</string>
+    <string name="disconnected">Disconnected</string>
+</resources>

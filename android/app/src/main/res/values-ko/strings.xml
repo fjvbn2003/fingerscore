@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Finger Score</string>
+    <string name="pair_ring_a">기기 연결 (A팀)</string>
+    <string name="pair_ring_b">기기 연결 (B팀)</string>
+    <string name="connected">연결됨</string>
+    <string name="connecting">연결 중...</string>
+    <string name="score_reset">점수 초기화</string>
+    <string name="team_a">A 팀</string>
+    <string name="team_b">B 팀</string>
+    <string name="sets">세트</string>
+    <string name="table_tennis">탁구</string>
+    <string name="tennis">테니스</string>
+    <string name="badminton">배드민턴</string>
+    <string name="scanning">10초간 스캔 중...</string>
+    <string name="no_devices">기기를 찾을 수 없음</string>
+    <string name="select_ring">%1$s 링 연결</string>
+</resources>

@@ -112,14 +112,39 @@ void loop() {
   int currentUpState = digitalRead(BUTTON_UP);
   int currentDownState = digitalRead(BUTTON_DOWN);
 
+  // Dual Button Long Press Detection (Reset Pairing)
+  static uint32_t resetHoldStart = 0;
+  if (currentUpState == LOW && currentDownState == LOW) {
+    if (resetHoldStart == 0) {
+      resetHoldStart = millis();
+    } else if (millis() - resetHoldStart > 2000) { // 2 seconds hold
+      Serial.println("RESET: Both buttons held. Disconnecting...");
+      // Visual feedback: Fast red blink
+      for (int i = 0; i < 5; i++) {
+        digitalWrite(LED_RED, LOW);
+        delay(100);
+        digitalWrite(LED_RED, HIGH);
+        delay(100);
+      }
+      Bluefruit.disconnect(0); // Disconnect all connections
+      resetHoldStart = 0;      // Reset timer
+    }
+  } else {
+    resetHoldStart = 0;
+  }
+
   // Simple Debounce/State Change Detection
-  if (currentUpState == LOW && lastUpState == HIGH) {
+  // Only trigger if only one button is pressed to avoid double scores during
+  // reset attempt
+  if (currentUpState == LOW && currentDownState == HIGH &&
+      lastUpState == HIGH) {
     sendScoreUpdate(1); // 1 = Up
     feedbackFlash();
     delay(50); // Small debounce
   }
 
-  if (currentDownState == LOW && lastDownState == HIGH) {
+  if (currentDownState == LOW && currentUpState == HIGH &&
+      lastDownState == HIGH) {
     sendScoreUpdate(2); // 2 = Down
     feedbackFlash();
     delay(50); // Small debounce

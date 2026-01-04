@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -18,24 +19,28 @@ import java.util.*
 
 enum class Sport { TABLE_TENNIS, TENNIS, BADMINTON }
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private var scoreA = 0
     private var scoreB = 0
+    private var setsA = 0
+    private var setsB = 0
     private var currentSport = Sport.TABLE_TENNIS
 
     private lateinit var tvScoreA: TextView
     private lateinit var tvScoreB: TextView
+    private lateinit var tvSetsA: TextView
+    private lateinit var tvSetsB: TextView
     private lateinit var tvStatus: TextView
     private lateinit var btnPairA: Button
     private lateinit var btnPairB: Button
+    
+    private var tts: TextToSpeech? = null
+    private var ttsEnabled = false
 
     private val bluetoothManager by lazy { getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager }
     private val bluetoothAdapter by lazy { bluetoothManager.adapter }
     private val bleScanner by lazy { bluetoothAdapter.bluetoothLeScanner }
-
-    private val SERVICE_UUID = UUID.fromString("12345678-9abc-def0-1234-56789abcdef0")
-    private val CHARACTERISTIC_UUID = UUID.fromString("12345678-9abc-def0-1234-56789abcdef1")
 
     private var addressA: String? = null
     private var addressB: String? = null
@@ -43,7 +48,7 @@ class MainActivity : AppCompatActivity() {
     
     // For Scan Dialog
     private val foundDevices = mutableMapOf<String, BluetoothDevice>()
-    private var pairingTeam: Char? = null // 'A' or 'B'
+    private var currentDialogAdapter: ArrayAdapter<String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,15 +56,52 @@ class MainActivity : AppCompatActivity() {
 
         tvScoreA = findViewById(R.id.tvScoreA)
         tvScoreB = findViewById(R.id.tvScoreB)
+        tvSetsA = findViewById(R.id.tvSetsA)
+        tvSetsB = findViewById(R.id.tvSetsB)
         tvStatus = findViewById(R.id.tvGlobalStatus)
         btnPairA = findViewById(R.id.btnPairA)
         btnPairB = findViewById(R.id.btnPairB)
 
+        tts = TextToSpeech(this, this)
+
         setupSportSelectors()
         setupManualControls()
         setupPairingButtons()
+        
+        findViewById<ImageButton>(R.id.btnResetAll).setOnClickListener {
+            resetAll()
+        }
 
         checkPermissions()
+        updateUI()
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts?.setLanguage(Locale.getDefault())
+            if (result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED) {
+                ttsEnabled = true
+            }
+        }
+    }
+
+    private fun announceScore() {
+        if (!ttsEnabled) return
+        val text = if (currentSport == Sport.TENNIS) {
+            "${getString(R.string.team_a)} ${formatScore(scoreA)}, ${getString(R.string.team_b)} ${formatScore(scoreB)}"
+        } else {
+            "${getString(R.string.team_a)} $scoreA, ${getString(R.string.team_b)} $scoreB"
+        }
+        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+    }
+
+    private fun resetAll() {
+        scoreA = 0
+        scoreB = 0
+        setsA = 0
+        setsB = 0
+        updateUI()
+        Toast.makeText(this, getString(R.string.score_reset), Toast.LENGTH_SHORT).show()
     }
 
     private fun setupSportSelectors() {
@@ -68,36 +110,54 @@ class MainActivity : AppCompatActivity() {
         val btnBadm = findViewById<Button>(R.id.btnBadminton)
 
         val resetColors = {
-            btnTT.setTextColor(0xFFFFFFFF.toInt())
-            btnTennis.setTextColor(0xFFFFFFFF.toInt())
-            btnBadm.setTextColor(0xFFFFFFFF.toInt())
+            btnTT.setTextColor(getColor(R.color.text_secondary))
+            btnTennis.setTextColor(getColor(R.color.text_secondary))
+            btnBadm.setTextColor(getColor(R.color.text_secondary))
         }
 
         btnTT.setOnClickListener {
             currentSport = Sport.TABLE_TENNIS
             resetColors()
-            btnTT.setTextColor(0xFF00E676.toInt())
+            btnTT.setTextColor(getColor(R.color.accent_green))
             updateUI()
         }
         btnTennis.setOnClickListener {
             currentSport = Sport.TENNIS
             resetColors()
-            btnTennis.setTextColor(0xFF00E676.toInt())
+            btnTennis.setTextColor(getColor(R.color.accent_green))
             updateUI()
         }
         btnBadm.setOnClickListener {
             currentSport = Sport.BADMINTON
             resetColors()
-            btnBadm.setTextColor(0xFF00E676.toInt())
+            btnBadm.setTextColor(getColor(R.color.accent_green))
             updateUI()
         }
     }
 
     private fun setupManualControls() {
-        findViewById<ImageButton>(R.id.plusOneA).setOnClickListener { scoreA++; updateUI() }
+        findViewById<ImageButton>(R.id.plusOneA).setOnClickListener { scoreA++; announceScore(); checkGameWin('A'); updateUI() }
         findViewById<ImageButton>(R.id.btnMinusA).setOnClickListener { if (scoreA > 0) scoreA--; updateUI() }
-        findViewById<ImageButton>(R.id.plusOneB).setOnClickListener { scoreB++; updateUI() }
+        findViewById<ImageButton>(R.id.plusOneB).setOnClickListener { scoreB++; announceScore(); checkGameWin('B'); updateUI() }
         findViewById<ImageButton>(R.id.btnMinusB).setOnClickListener { if (scoreB > 0) scoreB--; updateUI() }
+    }
+
+    private fun checkGameWin(team: Char) {
+        val winScore = when (currentSport) {
+            Sport.TABLE_TENNIS -> 11
+            Sport.TENNIS -> 4 // Simplified Game win (Needs Deuce logic for pro)
+             Sport.BADMINTON -> 21
+        }
+        
+        if (team == 'A' && scoreA >= winScore) {
+            setsA++
+            scoreA = 0
+            scoreB = 0
+        } else if (team == 'B' && scoreB >= winScore) {
+            setsB++
+            scoreA = 0
+            scoreB = 0
+        }
     }
 
     private fun setupPairingButtons() {
@@ -106,42 +166,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startPairingFlow(team: Char) {
-        pairingTeam = team
         foundDevices.clear()
-        
+        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mutableListOf())
+        currentDialogAdapter = adapter
+
         val dialog = AlertDialog.Builder(this)
-            .setTitle("Pair Ring for Team $team")
-            .setItems(arrayOf("Scanning...")) { _, _ -> }
-            .setNegativeButton("Cancel") { _, _ -> bleScanner.stopScan(scanCallback) }
+            .setTitle(getString(R.string.select_ring, if (team == 'A') "A" else "B"))
+            .setAdapter(adapter) { _, position ->
+                val displayName = adapter.getItem(position)
+                val device = foundDevices[displayName]
+                if (device != null) {
+                    if (team == 'A') addressA = device.address else addressB = device.address
+                    connectToDevice(device)
+                }
+            }
+            .setNegativeButton(android.R.string.cancel) { _, _ -> bleScanner.stopScan(scanCallback) }
             .show()
 
-        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mutableListOf())
-        dialog.listView.adapter = adapter
-        dialog.listView.setOnItemClickListener { _, _, position, _ ->
-            val name = adapter.getItem(position)
-            val device = foundDevices[name]
-            if (device != null) {
-                if (team == 'A') addressA = device.address else addressB = device.address
-                connectToDevice(device)
-                dialog.dismiss()
-            }
-        }
-
         bleScanner.startScan(scanCallback)
-        Toast.makeText(this, "Scanning for 10s...", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.scanning), Toast.LENGTH_SHORT).show()
         Handler(Looper.getMainLooper()).postDelayed({
             bleScanner.stopScan(scanCallback)
-            if (adapter.isEmpty) {
-                adapter.add("No devices found")
-                adapter.notifyDataSetChanged()
-            }
-        }, 5000)
-
-        // Internal scan callback update
-        this.currentDialogAdapter = adapter
+        }, 10000)
     }
-
-    private var currentDialogAdapter: ArrayAdapter<String>? = null
 
     private fun checkPermissions() {
         val permissions = arrayOf(
@@ -170,17 +217,12 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-        override fun onScanFailed(errorCode: Int) {
-            Log.e("BLE_DEBUG", "Scan failed: $errorCode")
-            runOnUiThread {
-                Toast.makeText(this@MainActivity, "Scan Failed: $errorCode", Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 
     private fun connectToDevice(device: BluetoothDevice) {
-        tvStatus.text = "Connecting to ${device.address}..."
+        val addr = device.address
+        if (connectedGatts.containsKey(addr)) return
+        tvStatus.text = "${getString(R.string.connecting)} $addr"
         device.connectGatt(this, false, gattCallback)
     }
 
@@ -189,57 +231,41 @@ class MainActivity : AppCompatActivity() {
             val addr = gatt.device.address
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 connectedGatts[addr] = gatt
-                runOnUiThread { tvStatus.text = "Connected: $addr" }
+                runOnUiThread { tvStatus.text = "${getString(R.string.connected)}: $addr" }
                 gatt.discoverServices()
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 connectedGatts.remove(addr)
-                runOnUiThread { tvStatus.text = "Disconnected: $addr" }
+                gatt.close()
+                runOnUiThread { tvStatus.text = "Disconnected: $addr"; updateUI() }
             }
         }
 
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
-            Log.d("BLE_DEBUG", "Services discovered: $status")
-            // Results in F0DEBC9A-7856-3412-F0DE-BC9A78563412
             val serviceUUID = UUID.fromString("f0debc9a-7856-3412-f0de-bc9a78563412")
             val charUUID = UUID.fromString("f1debc9a-7856-3412-f1de-bc9a78563412")
             
             val service = gatt.getService(serviceUUID)
-            if (service == null) {
-                Log.e("BLE_DEBUG", "Service NOT found: $serviceUUID")
-                // Log all discovered services for debugging
-                gatt.services.forEach { Log.d("BLE_DEBUG", "Found service: ${it.uuid}") }
-                return
-            }
-            
-            val char = service.getCharacteristic(charUUID)
+            val char = service?.getCharacteristic(charUUID)
             if (char != null) {
-                Log.d("BLE_DEBUG", "Characteristic found: $charUUID")
-                val registered = gatt.setCharacteristicNotification(char, true)
-                Log.d("BLE_DEBUG", "Notification registered: $registered")
-                
+                gatt.setCharacteristicNotification(char, true)
                 val descriptor = char.getDescriptor(UUID.fromString("00002902-0000-1000-8000-00805f9b34fb"))
                 if (descriptor != null) {
                     descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
-                    val success = gatt.writeDescriptor(descriptor)
-                    Log.d("BLE_DEBUG", "Descriptor write initiated: $success")
-                } else {
-                    Log.e("BLE_DEBUG", "Descriptor NOT found")
+                    gatt.writeDescriptor(descriptor)
                 }
-            } else {
-                Log.e("BLE_DEBUG", "Characteristic NOT found: $charUUID")
-                service.characteristics.forEach { Log.d("BLE_DEBUG", "Found char: ${it.uuid}") }
             }
         }
 
         override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
             val value = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0)
             val addr = gatt.device.address
-            Log.d("BLE_DEBUG", "Characteristic changed from $addr: value=$value")
             runOnUiThread {
                 if (addr == addressA) {
-                    if (value == 1) scoreA++ else if (value == 2 && scoreA > 0) scoreA--
+                    if (value == 1) { scoreA++; announceScore(); checkGameWin('A') } 
+                    else if (value == 2 && scoreA > 0) scoreA--
                 } else if (addr == addressB) {
-                    if (value == 1) scoreB++ else if (value == 2 && scoreB > 0) scoreB--
+                    if (value == 1) { scoreB++; announceScore(); checkGameWin('B') }
+                    else if (value == 2 && scoreB > 0) scoreB--
                 }
                 updateUI()
             }
@@ -249,8 +275,10 @@ class MainActivity : AppCompatActivity() {
     private fun updateUI() {
         tvScoreA.text = formatScore(scoreA)
         tvScoreB.text = formatScore(scoreB)
-        btnPairA.text = if (addressA != null) "A: Connected" else "PAIR RING A"
-        btnPairB.text = if (addressB != null) "B: Connected" else "PAIR RING B"
+        tvSetsA.text = setsA.toString()
+        tvSetsB.text = setsB.toString()
+        btnPairA.text = if (addressA != null && connectedGatts.containsKey(addressA)) getString(R.string.connected) else getString(R.string.pair_ring_a)
+        btnPairB.text = if (addressB != null && connectedGatts.containsKey(addressB)) getString(R.string.connected) else getString(R.string.pair_ring_b)
     }
 
     private fun formatScore(s: Int): String {
@@ -264,5 +292,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return s.toString()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        tts?.stop()
+        tts?.shutdown()
+        connectedGatts.values.forEach { it.close() }
     }
 }
