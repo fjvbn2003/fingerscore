@@ -12,6 +12,23 @@
     <string name="tennis">테니스</string>
     <string name="badminton">배드민턴</string>
     <string name="scanning">10초간 스캔 중...</string>
+    <string name="scan_failed">스캔 실패: %1$d</string>
     <string name="no_devices">기기를 찾을 수 없음</string>
-    <string name="select_ring">%1$s 링 연결</string>
+    <string name="unknown_device">알 수 없는 기기</string>
+    <string name="select_ring">%1$s팀 링 연결</string>
+    <string name="disconnected">연결 해제됨</string>
+
+    <!-- Settings -->
+    <string name="settings">설정</string>
+    <string name="sound_toggle">음성 안내</string>
+    <string name="font_size">글자 크기</string>
+    <string name="font_small">소</string>
+    <string name="font_medium">중</string>
+    <string name="font_large">대</string>
+    <string name="win_score">목표 점수</string>
+    <string name="language">언어</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ko">한국어</string>
+    <string name="lang_ja">日本語</string>
+    <string name="lang_zh">简体中文</string>
 </resources>

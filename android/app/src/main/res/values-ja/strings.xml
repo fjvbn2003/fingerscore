@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Finger Score</string>
+    <string name="pair_ring_a">ペアリング (チームA)</string>
+    <string name="pair_ring_b">ペアリング (チームB)</string>
+    <string name="connected">接続済み</string>
+    <string name="connecting">接続中...</string>
+    <string name="score_reset">スコアリセット</string>
+    <string name="team_a">チームA</string>
+    <string name="team_b">チームB</string>
+    <string name="sets">セット</string>
+    <string name="table_tennis">卓球</string>
+    <string name="tennis">テニス</string>
+    <string name="badminton">バドミントン</string>
+    <string name="scanning">10秒間スキャン中...</string>
+    <string name="scan_failed">スキャン失敗: %1$d</string>
+    <string name="no_devices">デバイスが見つかりません</string>
+    <string name="unknown_device">不明なデバイス</string>
+    <string name="select_ring">チーム%1$sのリングを選択</string>
+    <string name="disconnected">切断されました</string>
+    
+    <!-- Settings -->
+    <string name="settings">設定</string>
+    <string name="sound_toggle">音声案内</string>
+    <string name="font_size">文字サイズ</string>
+    <string name="font_small">小</string>
+    <string name="font_medium">中</string>
+    <string name="font_large">大</string>
+    <string name="win_score">勝利目標スコア</string>
+    <string name="language">言語</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ko">한국어</string>
+    <string name="lang_ja">日本語</string>
+    <string name="lang_zh">简体中文</string>
+</resources>

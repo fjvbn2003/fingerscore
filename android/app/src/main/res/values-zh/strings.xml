@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Finger Score</string>
+    <string name="pair_ring_a">配对 (A队)</string>
+    <string name="pair_ring_b">配对 (B队)</string>
+    <string name="connected">已连接</string>
+    <string name="connecting">连接中...</string>
+    <string name="score_reset">分数重置</string>
+    <string name="team_a">A 队</string>
+    <string name="team_b">B 队</string>
+    <string name="sets">局数</string>
+    <string name="table_tennis">乒乓球</string>
+    <string name="tennis">网球</string>
+    <string name="badminton">羽毛球</string>
+    <string name="scanning">正在扫描 (10秒)...</string>
+    <string name="scan_failed">扫描失败: %1$d</string>
+    <string name="no_devices">未找到设备</string>
+    <string name="unknown_device">未知设备</string>
+    <string name="select_ring">选择 %1$s 队的指环</string>
+    <string name="disconnected">连接已断开</string>
+    
+    <!-- Settings -->
+    <string name="settings">设置</string>
+    <string name="sound_toggle">语音播报</string>
+    <string name="font_size">字体大小</string>
+    <string name="font_small">小</string>
+    <string name="font_medium">中</string>
+    <string name="font_large">大</string>
+    <string name="win_score">获胜分值</string>
+    <string name="language">语言</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ko">한국어</string>
+    <string name="lang_ja">日本語</string>
+    <string name="lang_zh">简体中文</string>
+</resources>
