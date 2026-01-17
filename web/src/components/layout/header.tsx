@@ -27,6 +27,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/auth-context";
+import { NotificationDropdown } from "@/components/notification/notification-dropdown";
 
 const navigationItems = [
   { key: "tournaments", href: "/tournaments", icon: Trophy },
@@ -83,6 +84,7 @@ export function Header() {
         <div className="flex flex-1 items-center justify-end gap-2">
           {!isLoading && (
             <>
+              {user && <NotificationDropdown />}
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
