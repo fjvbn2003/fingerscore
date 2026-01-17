@@ -1,0 +1,182 @@
+{
+  "common": {
+    "appName": "FingerScore",
+    "login": "Login",
+    "signup": "Sign Up",
+    "logout": "Logout",
+    "profile": "Profile",
+    "settings": "Settings",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "close": "Close"
+  },
+  "nav": {
+    "tournaments": "Tournaments",
+    "community": "Community",
+    "rankings": "Rankings",
+    "live": "Live"
+  },
+  "home": {
+    "hero": {
+      "badge": "Smarter with Smart Ring",
+      "title": "The New Standard for",
+      "titleHighlight": "Table Tennis Tournaments",
+      "description": "With FingerScore, everything from tournament management to score recording and real-time brackets becomes simple.",
+      "cta": "Find Tournaments"
+    },
+    "features": {
+      "title": "Everything for Table Tennis Tournaments",
+      "subtitle": "Tournaments, community, rankings, and live watching all in one place",
+      "tournaments": {
+        "title": "Join Tournaments",
+        "description": "Enjoy tournaments with real-time brackets. Submit scores from your phone and they update automatically."
+      },
+      "community": {
+        "title": "Community",
+        "description": "Connect with table tennis enthusiasts and share tournament reviews and equipment reviews."
+      },
+      "rankings": {
+        "title": "Ranking System",
+        "description": "Check your skills with ELO rating and challenge seasonal rankings."
+      },
+      "live": {
+        "title": "Live Watching",
+        "description": "Watch ongoing matches in real-time and cheer on."
+      }
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "From tournament management to real-time score updates, in 3 simple steps",
+      "step1": {
+        "title": "Register for Tournament",
+        "description": "Find your tournament and apply. You'll receive a notification when the organizer confirms."
+      },
+      "step2": {
+        "title": "Play & Submit Score",
+        "description": "Submit scores from your phone after the match. It's reflected immediately when approved."
+      },
+      "step3": {
+        "title": "Real-time Bracket",
+        "description": "All participants can check the bracket in real-time. See your next opponent instantly!"
+      }
+    },
+    "cta": {
+      "title": "Get Started Now",
+      "description": "Start a new experience with FingerScore. Sign up for free and join your first tournament.",
+      "button": "Free Sign Up"
+    }
+  },
+  "auth": {
+    "loginTitle": "Login",
+    "signupTitle": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "username": "Username",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "orContinueWith": "or",
+    "google": "Continue with Google",
+    "kakao": "Continue with Kakao"
+  },
+  "tournaments": {
+    "title": "Tournaments",
+    "upcoming": "Upcoming",
+    "ongoing": "Ongoing",
+    "completed": "Completed",
+    "createNew": "Create Tournament",
+    "register": "Register",
+    "registered": "Registered",
+    "bracket": "Bracket",
+    "participants": "Participants",
+    "schedule": "Schedule",
+    "rules": "Rules",
+    "sportType": {
+      "TABLE_TENNIS": "Table Tennis",
+      "TENNIS": "Tennis",
+      "BADMINTON": "Badminton"
+    },
+    "tournamentType": {
+      "SINGLE_ELIMINATION": "Single Elimination",
+      "DOUBLE_ELIMINATION": "Double Elimination"
+    },
+    "matchFormat": {
+      "SINGLES": "Singles",
+      "DOUBLES": "Doubles"
+    }
+  },
+  "match": {
+    "score": "Score",
+    "sets": "Sets",
+    "submitScore": "Submit Score",
+    "pending": "Pending",
+    "inProgress": "In Progress",
+    "completed": "Completed",
+    "winner": "Winner",
+    "vs": "vs"
+  },
+  "community": {
+    "title": "Community",
+    "boards": {
+      "FREE": "Free Board",
+      "TOURNAMENT_REVIEW": "Tournament Reviews",
+      "EQUIPMENT_REVIEW": "Equipment Reviews",
+      "TIPS": "Tips & Know-how"
+    },
+    "writePost": "Write Post",
+    "comments": "Comments",
+    "likes": "Likes",
+    "views": "Views"
+  },
+  "rankings": {
+    "title": "Rankings",
+    "globalRanking": "Global Ranking",
+    "seasonRanking": "Season Ranking",
+    "rating": "Rating",
+    "wins": "W",
+    "losses": "L",
+    "winRate": "Win Rate"
+  },
+  "live": {
+    "title": "Live",
+    "noMatches": "No matches in progress",
+    "watching": "watching"
+  },
+  "profile": {
+    "title": "Profile",
+    "editProfile": "Edit Profile",
+    "matchHistory": "Match History",
+    "statistics": "Statistics",
+    "achievements": "Achievements"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "notifications": "Notifications",
+    "sound": "Sound"
+  },
+  "footer": {
+    "service": "Service",
+    "support": "Support",
+    "legal": "Legal",
+    "guide": "User Guide",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "copyright": "© {year} FingerScore. All rights reserved."
+  }
+}
