@@ -13,6 +13,7 @@ import {
   Settings,
   LayoutDashboard,
   Globe,
+  Gamepad2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -34,6 +35,7 @@ const navigationItems = [
   { key: "community", href: "/community", icon: Users },
   { key: "rankings", href: "/rankings", icon: BarChart3 },
   { key: "live", href: "/live", icon: Radio },
+  { key: "tools", href: "/tools", icon: Gamepad2 },
 ];
 
 export function Header() {
