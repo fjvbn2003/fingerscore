@@ -28,15 +28,15 @@ describe("Footer", () => {
     render(<Footer />);
     expect(screen.getByText("footer.support")).toBeInTheDocument();
     expect(screen.getByText("footer.guide")).toBeInTheDocument();
-    expect(screen.getByText("footer.faq")).toBeInTheDocument();
-    expect(screen.getByText("footer.contact")).toBeInTheDocument();
+    expect(screen.getByText("faq.title")).toBeInTheDocument();
+    expect(screen.getByText("contact.title")).toBeInTheDocument();
   });
 
   it("renders legal links section", () => {
     render(<Footer />);
     expect(screen.getByText("footer.legal")).toBeInTheDocument();
-    expect(screen.getByText("footer.privacy")).toBeInTheDocument();
-    expect(screen.getByText("footer.terms")).toBeInTheDocument();
+    expect(screen.getByText("legal.privacyTitle")).toBeInTheDocument();
+    expect(screen.getByText("legal.termsTitle")).toBeInTheDocument();
   });
 
   it("renders copyright with current year", () => {

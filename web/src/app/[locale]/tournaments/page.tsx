@@ -9,9 +9,12 @@ import {
   MapPin,
   Users,
   Search,
-  Filter,
   Plus,
   ChevronRight,
+  Sparkles,
+  Clock,
+  Flame,
+  Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,6 +35,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Progress } from "@/components/ui/progress";
 import type { SportType, TournamentType, MatchFormat } from "@/types/database";
 
 // Mock data for tournaments
@@ -52,6 +56,7 @@ const mockTournaments = [
     entry_fee: 20000,
     is_published: true,
     status: "registrationOpen",
+    prize: "100만원",
   },
   {
     id: "2",
@@ -69,6 +74,7 @@ const mockTournaments = [
     entry_fee: 15000,
     is_published: true,
     status: "inProgress",
+    prize: "50만원",
   },
   {
     id: "3",
@@ -86,6 +92,7 @@ const mockTournaments = [
     entry_fee: 30000,
     is_published: true,
     status: "upcoming",
+    prize: "200만원",
   },
   {
     id: "4",
@@ -103,21 +110,22 @@ const mockTournaments = [
     entry_fee: 25000,
     is_published: true,
     status: "completed",
+    prize: "80만원",
   },
 ];
 
-const sportTypeColors: Record<SportType, string> = {
-  TABLE_TENNIS: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300",
-  TENNIS: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-  BADMINTON: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+const sportTypeConfig: Record<SportType, { color: string; bgColor: string; icon: string }> = {
+  TABLE_TENNIS: { color: "text-orange-400", bgColor: "bg-orange-500/20", icon: "🏓" },
+  TENNIS: { color: "text-green-400", bgColor: "bg-green-500/20", icon: "🎾" },
+  BADMINTON: { color: "text-blue-400", bgColor: "bg-blue-500/20", icon: "🏸" },
 };
 
-const statusColors: Record<string, string> = {
-  upcoming: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300",
-  registrationOpen: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-  registrationClosed: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
-  inProgress: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-  completed: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300",
+const statusConfig: Record<string, { color: string; bgColor: string; borderColor: string; label: string }> = {
+  upcoming: { color: "text-muted-foreground", bgColor: "bg-muted/50", borderColor: "border-white/10", label: "예정" },
+  registrationOpen: { color: "text-emerald-400", bgColor: "bg-emerald-500/20", borderColor: "border-emerald-500/30", label: "모집중" },
+  registrationClosed: { color: "text-amber-400", bgColor: "bg-amber-500/20", borderColor: "border-amber-500/30", label: "모집마감" },
+  inProgress: { color: "text-blue-400", bgColor: "bg-blue-500/20", borderColor: "border-blue-500/30", label: "진행중" },
+  completed: { color: "text-muted-foreground", bgColor: "bg-muted/50", borderColor: "border-white/10", label: "종료" },
 };
 
 export default function TournamentsPage() {
@@ -134,26 +142,30 @@ export default function TournamentsPage() {
     return matchesSearch && matchesSport;
   });
 
-  const getStatusText = (status: string) => {
-    return t(`tournaments.status.${status}`);
-  };
-
   return (
-    <div className="container max-w-screen-2xl py-8">
+    <div className="container max-w-screen-2xl py-8 px-4 md:px-6">
       {/* Page Header */}
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">{t("tournaments.title")}</h1>
-          <p className="mt-1 text-muted-foreground">
-            다양한 대회에 참가하고 실력을 겨뤄보세요
-          </p>
+      <div className="mb-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 text-sm font-medium mb-3">
+              <Trophy className="h-4 w-4 text-amber-400" />
+              <span className="text-muted-foreground">
+                {mockTournaments.filter(t => t.status === "registrationOpen").length}개 대회 모집중
+              </span>
+            </div>
+            <h1 className="text-3xl font-bold">{t("tournaments.title")}</h1>
+            <p className="mt-1 text-muted-foreground">
+              다양한 대회에 참가하고 실력을 겨뤄보세요
+            </p>
+          </div>
+          <Button asChild className="bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-600 hover:to-blue-700 text-white border-0 shadow-lg shadow-emerald-500/25">
+            <Link href="/tournaments/create">
+              <Plus className="mr-2 h-4 w-4" />
+              {t("tournaments.createTournament")}
+            </Link>
+          </Button>
         </div>
-        <Button asChild>
-          <Link href="/tournaments/create">
-            <Plus className="mr-2 h-4 w-4" />
-            {t("tournaments.createTournament")}
-          </Link>
-        </Button>
       </div>
 
       {/* Filters */}
@@ -162,26 +174,31 @@ export default function TournamentsPage() {
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder={t("common.search")}
-            className="pl-10"
+            className="pl-10 glass border-white/10 focus:border-emerald-500/50"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
         <Select value={sportFilter} onValueChange={setSportFilter}>
-          <SelectTrigger className="w-full sm:w-[180px]">
-            <Filter className="mr-2 h-4 w-4" />
+          <SelectTrigger className="w-full sm:w-[180px] glass border-white/10">
             <SelectValue placeholder="종목 선택" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="glass-card border-white/10">
             <SelectItem value="all">전체 종목</SelectItem>
             <SelectItem value="TABLE_TENNIS">
-              {t("tournaments.sportType.TABLE_TENNIS")}
+              <span className="flex items-center gap-2">
+                🏓 {t("tournaments.sportType.TABLE_TENNIS")}
+              </span>
             </SelectItem>
             <SelectItem value="TENNIS">
-              {t("tournaments.sportType.TENNIS")}
+              <span className="flex items-center gap-2">
+                🎾 {t("tournaments.sportType.TENNIS")}
+              </span>
             </SelectItem>
             <SelectItem value="BADMINTON">
-              {t("tournaments.sportType.BADMINTON")}
+              <span className="flex items-center gap-2">
+                🏸 {t("tournaments.sportType.BADMINTON")}
+              </span>
             </SelectItem>
           </SelectContent>
         </Select>
@@ -189,46 +206,31 @@ export default function TournamentsPage() {
 
       {/* Tabs */}
       <Tabs defaultValue="all" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="all">전체</TabsTrigger>
-          <TabsTrigger value="registrationOpen">
+        <TabsList className="glass border-white/10 p-1">
+          <TabsTrigger value="all" className="data-[state=active]:bg-white/10">전체</TabsTrigger>
+          <TabsTrigger value="registrationOpen" className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-400">
+            <Flame className="h-4 w-4 mr-1" />
             {t("tournaments.status.registrationOpen")}
           </TabsTrigger>
-          <TabsTrigger value="inProgress">
+          <TabsTrigger value="inProgress" className="data-[state=active]:bg-blue-500/20 data-[state=active]:text-blue-400">
+            <Zap className="h-4 w-4 mr-1" />
             {t("tournaments.status.inProgress")}
           </TabsTrigger>
-          <TabsTrigger value="completed">
+          <TabsTrigger value="completed" className="data-[state=active]:bg-white/10">
             {t("tournaments.status.completed")}
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="all" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {filteredTournaments.map((tournament) => (
-              <TournamentCard
-                key={tournament.id}
-                tournament={tournament}
-                t={t}
-                getStatusText={getStatusText}
-              />
-            ))}
-          </div>
+          <TournamentGrid tournaments={filteredTournaments} t={t} />
         </TabsContent>
 
         {["registrationOpen", "inProgress", "completed"].map((status) => (
           <TabsContent key={status} value={status} className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {filteredTournaments
-                .filter((t) => t.status === status)
-                .map((tournament) => (
-                  <TournamentCard
-                    key={tournament.id}
-                    tournament={tournament}
-                    t={t}
-                    getStatusText={getStatusText}
-                  />
-                ))}
-            </div>
+            <TournamentGrid
+              tournaments={filteredTournaments.filter((t) => t.status === status)}
+              t={t}
+            />
           </TabsContent>
         ))}
       </Tabs>
@@ -236,75 +238,154 @@ export default function TournamentsPage() {
   );
 }
 
+function TournamentGrid({
+  tournaments,
+  t,
+}: {
+  tournaments: typeof mockTournaments;
+  t: ReturnType<typeof useTranslations>;
+}) {
+  if (tournaments.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 text-center">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-muted/50 mb-4">
+          <Trophy className="h-8 w-8 text-muted-foreground" />
+        </div>
+        <h3 className="text-lg font-semibold mb-1">대회가 없습니다</h3>
+        <p className="text-sm text-muted-foreground">
+          검색 조건에 맞는 대회가 없습니다
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {tournaments.map((tournament) => (
+        <TournamentCard key={tournament.id} tournament={tournament} t={t} />
+      ))}
+    </div>
+  );
+}
+
 function TournamentCard({
   tournament,
   t,
-  getStatusText,
 }: {
   tournament: (typeof mockTournaments)[0];
   t: ReturnType<typeof useTranslations>;
-  getStatusText: (status: string) => string;
 }) {
+  const sportConfig = sportTypeConfig[tournament.sport_type];
+  const status = statusConfig[tournament.status];
+  const fillPercentage = (tournament.current_participants / tournament.max_participants) * 100;
+  const isAlmostFull = fillPercentage >= 80;
+
   return (
-    <Card className="group overflow-hidden transition-all hover:shadow-lg">
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between gap-2">
-          <Badge className={sportTypeColors[tournament.sport_type]}>
-            {t(`tournaments.sportType.${tournament.sport_type}`)}
-          </Badge>
-          <Badge variant="outline" className={statusColors[tournament.status]}>
-            {getStatusText(tournament.status)}
-          </Badge>
-        </div>
-        <CardTitle className="mt-2 line-clamp-2">{tournament.title}</CardTitle>
-        <CardDescription className="flex items-center gap-1">
-          <MapPin className="h-3 w-3" />
-          {tournament.venue}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-3 pb-3">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Calendar className="h-4 w-4" />
-          <span>
-            {new Date(tournament.tournament_start).toLocaleDateString("ko-KR", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </span>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Users className="h-4 w-4" />
-          <span>
-            {tournament.current_participants} / {tournament.max_participants}명
-          </span>
-          <div className="ml-auto flex items-center gap-1">
-            <Trophy className="h-4 w-4" />
-            <span>{t(`tournaments.matchFormat.${tournament.match_format}`)}</span>
+    <Link href={`/tournaments/${tournament.id}`} className="group block">
+      <Card className="glass-card border-white/5 overflow-hidden transition-all duration-300 hover:border-white/10 hover-lift h-full">
+        {/* Header with gradient */}
+        <div className="h-2 bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-500 opacity-50 group-hover:opacity-100 transition-opacity" />
+
+        <CardHeader className="pb-3">
+          <div className="flex items-start justify-between gap-2">
+            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${sportConfig.bgColor}`}>
+              <span>{sportConfig.icon}</span>
+              <span className={`text-xs font-medium ${sportConfig.color}`}>
+                {t(`tournaments.sportType.${tournament.sport_type}`)}
+              </span>
+            </div>
+            <Badge
+              variant="outline"
+              className={`${status.bgColor} ${status.color} ${status.borderColor}`}
+            >
+              {tournament.status === "inProgress" && (
+                <span className="relative flex h-2 w-2 mr-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500" />
+                </span>
+              )}
+              {status.label}
+            </Badge>
           </div>
-        </div>
-        {/* Progress bar */}
-        <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
-          <div
-            className="h-full bg-primary transition-all"
-            style={{
-              width: `${(tournament.current_participants / tournament.max_participants) * 100}%`,
-            }}
-          />
-        </div>
-      </CardContent>
-      <CardFooter className="pt-0">
-        <Button
-          variant="ghost"
-          className="w-full group-hover:bg-primary group-hover:text-primary-foreground"
-          asChild
-        >
-          <Link href={`/tournaments/${tournament.id}`}>
+
+          <CardTitle className="mt-3 line-clamp-2 group-hover:text-white transition-colors">
+            {tournament.title}
+          </CardTitle>
+
+          <CardDescription className="flex items-center gap-1.5 mt-1">
+            <MapPin className="h-3.5 w-3.5" />
+            {tournament.venue}
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent className="space-y-4 pb-4">
+          {/* Date & Format */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="flex items-center gap-2 text-sm">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/20">
+                <Calendar className="h-4 w-4 text-emerald-400" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">대회일</p>
+                <p className="font-medium">
+                  {new Date(tournament.tournament_start).toLocaleDateString("ko-KR", {
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/20">
+                <Sparkles className="h-4 w-4 text-amber-400" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground">상금</p>
+                <p className="font-medium text-amber-400">{tournament.prize}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Participants */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center gap-1.5">
+                <Users className="h-4 w-4 text-muted-foreground" />
+                <span className="text-muted-foreground">참가자</span>
+              </div>
+              <span className={isAlmostFull ? "text-amber-400 font-medium" : ""}>
+                {tournament.current_participants} / {tournament.max_participants}명
+                {isAlmostFull && " 마감임박!"}
+              </span>
+            </div>
+            <Progress
+              value={fillPercentage}
+              className={`h-2 ${isAlmostFull ? "[&>div]:bg-amber-500" : ""}`}
+            />
+          </div>
+
+          {/* Entry Fee & Format */}
+          <div className="flex items-center justify-between text-sm pt-2 border-t border-white/5">
+            <div className="flex items-center gap-1.5 text-muted-foreground">
+              <Trophy className="h-4 w-4" />
+              <span>{t(`tournaments.matchFormat.${tournament.match_format}`)}</span>
+            </div>
+            <span className="font-medium">
+              ₩{tournament.entry_fee.toLocaleString()}
+            </span>
+          </div>
+        </CardContent>
+
+        <CardFooter className="pt-0">
+          <Button
+            variant="ghost"
+            className="w-full glass hover:bg-white/10 group-hover:bg-gradient-to-r group-hover:from-emerald-500 group-hover:to-blue-600 group-hover:text-white transition-all"
+          >
             {t("tournaments.details")}
             <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Link>
-        </Button>
-      </CardFooter>
-    </Card>
+          </Button>
+        </CardFooter>
+      </Card>
+    </Link>
   );
 }
