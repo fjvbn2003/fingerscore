@@ -1,0 +1,196 @@
+{
+  "common": {
+    "login": "登录",
+    "signup": "注册",
+    "logout": "退出登录",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "search": "搜索",
+    "loading": "加载中...",
+    "error": "发生错误",
+    "success": "成功",
+    "confirm": "确认",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步",
+    "viewAll": "查看全部",
+    "more": "更多"
+  },
+  "nav": {
+    "tournaments": "赛事",
+    "community": "社区",
+    "rankings": "排行榜",
+    "live": "直播"
+  },
+  "home": {
+    "hero": {
+      "title": "用智能戒指",
+      "titleHighlight": "让乒乓球更智能",
+      "description": "使用FingerScore轻松记录比分，参加比赛，实时观看比赛。"
+    },
+    "features": {
+      "title": "一切触手可及",
+      "tournaments": {
+        "title": "参加比赛",
+        "description": "报名参加各种比赛，遇见新的对手。"
+      },
+      "community": {
+        "title": "社区",
+        "description": "与乒乓球爱好者分享信息，交流技巧。"
+      },
+      "rankings": {
+        "title": "排名系统",
+        "description": "根据比赛结果获得积分，了解自己的实力。"
+      },
+      "live": {
+        "title": "实时观赛",
+        "description": "实时观看正在进行的比赛，为选手加油。"
+      }
+    },
+    "howItWorks": {
+      "title": "如何开始",
+      "step1": {
+        "title": "注册账号",
+        "description": "简单注册即可开始使用FingerScore。"
+      },
+      "step2": {
+        "title": "参加比赛",
+        "description": "找到感兴趣的比赛并报名。"
+      },
+      "step3": {
+        "title": "享受比赛",
+        "description": "用智能戒指轻松记录比分，享受比赛。"
+      }
+    },
+    "cta": {
+      "title": "立即开始",
+      "description": "与FingerScore一起开启全新乒乓球体验。"
+    }
+  },
+  "auth": {
+    "email": "邮箱",
+    "password": "密码",
+    "confirmPassword": "确认密码",
+    "username": "用户名",
+    "forgotPassword": "忘记密码？",
+    "noAccount": "没有账号？",
+    "hasAccount": "已有账号？",
+    "loginSuccess": "登录成功",
+    "signupSuccess": "注册成功",
+    "invalidCredentials": "邮箱或密码错误"
+  },
+  "tournaments": {
+    "title": "赛事",
+    "createTournament": "创建比赛",
+    "upcoming": "即将开始",
+    "ongoing": "进行中",
+    "completed": "已结束",
+    "register": "报名",
+    "registered": "已报名",
+    "details": "详情",
+    "bracket": "对阵表",
+    "participants": "参赛者",
+    "sportType": {
+      "TABLE_TENNIS": "乒乓球",
+      "TENNIS": "网球",
+      "BADMINTON": "羽毛球"
+    },
+    "tournamentType": {
+      "SINGLE_ELIMINATION": "单败淘汰",
+      "DOUBLE_ELIMINATION": "双败淘汰"
+    },
+    "matchFormat": {
+      "SINGLES": "单打",
+      "DOUBLES": "双打"
+    },
+    "status": {
+      "upcoming": "即将开始",
+      "registrationOpen": "报名中",
+      "registrationClosed": "报名结束",
+      "inProgress": "进行中",
+      "completed": "已结束"
+    }
+  },
+  "match": {
+    "score": "比分",
+    "sets": "局",
+    "winner": "胜者",
+    "matchNumber": "第{{number}}场",
+    "round": "第{{number}}轮",
+    "submitScore": "提交比分",
+    "status": {
+      "pending": "等待中",
+      "inProgress": "进行中",
+      "completed": "已结束",
+      "cancelled": "已取消"
+    }
+  },
+  "community": {
+    "title": "社区",
+    "writePost": "发帖",
+    "boards": {
+      "free": "自由讨论",
+      "tournamentReview": "比赛评价",
+      "equipmentReview": "器材评测",
+      "tips": "技巧分享"
+    },
+    "post": {
+      "views": "浏览",
+      "likes": "点赞",
+      "comments": "评论"
+    }
+  },
+  "rankings": {
+    "title": "排行榜",
+    "rank": "排名",
+    "player": "选手",
+    "rating": "积分",
+    "wins": "胜",
+    "losses": "负",
+    "winRate": "胜率",
+    "recentMatches": "最近比赛"
+  },
+  "live": {
+    "title": "实时比赛",
+    "noLiveMatches": "当前没有正在进行的比赛",
+    "watching": "人正在观看",
+    "set": "局",
+    "point": "分"
+  },
+  "profile": {
+    "title": "个人资料",
+    "editProfile": "编辑资料",
+    "stats": "统计",
+    "matchHistory": "比赛记录",
+    "achievements": "成就"
+  },
+  "settings": {
+    "title": "设置",
+    "account": "账号",
+    "notifications": "通知",
+    "language": "语言",
+    "theme": "主题",
+    "privacy": "隐私"
+  },
+  "footer": {
+    "service": "服务",
+    "support": "支持",
+    "legal": "法律信息",
+    "guide": "使用指南",
+    "faq": "常见问题",
+    "contact": "联系我们",
+    "privacy": "隐私政策",
+    "terms": "服务条款",
+    "copyright": "© {{year}} FingerScore. 保留所有权利。"
+  },
+  "dashboard": {
+    "title": "控制台",
+    "welcome": "欢迎，{{name}}",
+    "myTournaments": "我的比赛",
+    "upcomingMatches": "即将进行的比赛",
+    "recentActivity": "最近动态",
+    "quickStats": "快速统计"
+  }
+}

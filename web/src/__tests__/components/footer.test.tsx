@@ -11,12 +11,12 @@ describe("Footer", () => {
 
   it("renders service links section", () => {
     render(<Footer />);
-    expect(screen.getByText("서비스")).toBeInTheDocument();
+    expect(screen.getByText("footer.service")).toBeInTheDocument();
 
-    const tournamentsLink = screen.getByRole("link", { name: "대회" });
-    const communityLink = screen.getByRole("link", { name: "커뮤니티" });
-    const rankingsLink = screen.getByRole("link", { name: "랭킹" });
-    const liveLink = screen.getByRole("link", { name: "라이브" });
+    const tournamentsLink = screen.getByRole("link", { name: "nav.tournaments" });
+    const communityLink = screen.getByRole("link", { name: "nav.community" });
+    const rankingsLink = screen.getByRole("link", { name: "nav.rankings" });
+    const liveLink = screen.getByRole("link", { name: "nav.live" });
 
     expect(tournamentsLink).toHaveAttribute("href", "/tournaments");
     expect(communityLink).toHaveAttribute("href", "/community");
@@ -26,17 +26,17 @@ describe("Footer", () => {
 
   it("renders support links section", () => {
     render(<Footer />);
-    expect(screen.getByText("지원")).toBeInTheDocument();
-    expect(screen.getByText("이용 가이드")).toBeInTheDocument();
-    expect(screen.getByText("자주 묻는 질문")).toBeInTheDocument();
-    expect(screen.getByText("문의하기")).toBeInTheDocument();
+    expect(screen.getByText("footer.support")).toBeInTheDocument();
+    expect(screen.getByText("footer.guide")).toBeInTheDocument();
+    expect(screen.getByText("footer.faq")).toBeInTheDocument();
+    expect(screen.getByText("footer.contact")).toBeInTheDocument();
   });
 
   it("renders legal links section", () => {
     render(<Footer />);
-    expect(screen.getByText("법적 고지")).toBeInTheDocument();
-    expect(screen.getByText("개인정보처리방침")).toBeInTheDocument();
-    expect(screen.getByText("이용약관")).toBeInTheDocument();
+    expect(screen.getByText("footer.legal")).toBeInTheDocument();
+    expect(screen.getByText("footer.privacy")).toBeInTheDocument();
+    expect(screen.getByText("footer.terms")).toBeInTheDocument();
   });
 
   it("renders copyright with current year", () => {
@@ -49,8 +49,6 @@ describe("Footer", () => {
 
   it("renders brand description", () => {
     render(<Footer />);
-    expect(
-      screen.getByText(/스마트 링으로 탁구 점수를 기록하고/)
-    ).toBeInTheDocument();
+    expect(screen.getByText("home.hero.description")).toBeInTheDocument();
   });
 });

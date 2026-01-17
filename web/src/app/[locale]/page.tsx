@@ -1,40 +1,78 @@
-import Link from "next/link";
-import { Trophy, Users, BarChart3, Radio, ArrowRight, Zap } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import {
+  Trophy,
+  Users,
+  BarChart3,
+  Radio,
+  ArrowRight,
+  Zap,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-
-const features = [
-  {
-    icon: Trophy,
-    title: "대회 참가",
-    description: "실시간 대진표로 대회를 즐기세요. 스마트폰으로 점수를 제출하면 자동으로 업데이트됩니다.",
-    href: "/tournaments",
-    color: "text-yellow-500",
-  },
-  {
-    icon: Users,
-    title: "커뮤니티",
-    description: "탁구 동호인들과 소통하고, 대회 후기와 장비 리뷰를 공유하세요.",
-    href: "/community",
-    color: "text-blue-500",
-  },
-  {
-    icon: BarChart3,
-    title: "랭킹 시스템",
-    description: "ELO 레이팅으로 실력을 확인하고, 시즌별 랭킹에 도전하세요.",
-    href: "/rankings",
-    color: "text-green-500",
-  },
-  {
-    icon: Radio,
-    title: "라이브 관전",
-    description: "진행 중인 경기를 실시간으로 관전하고 응원하세요.",
-    href: "/live",
-    color: "text-red-500",
-  },
-];
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default function HomePage() {
+  const t = useTranslations();
+
+  const features = [
+    {
+      icon: Trophy,
+      title: t("home.features.tournaments.title"),
+      description: t("home.features.tournaments.description"),
+      href: "/tournaments",
+      color: "text-yellow-500",
+      bgColor: "bg-yellow-500/10",
+    },
+    {
+      icon: Users,
+      title: t("home.features.community.title"),
+      description: t("home.features.community.description"),
+      href: "/community",
+      color: "text-blue-500",
+      bgColor: "bg-blue-500/10",
+    },
+    {
+      icon: BarChart3,
+      title: t("home.features.rankings.title"),
+      description: t("home.features.rankings.description"),
+      href: "/rankings",
+      color: "text-green-500",
+      bgColor: "bg-green-500/10",
+    },
+    {
+      icon: Radio,
+      title: t("home.features.live.title"),
+      description: t("home.features.live.description"),
+      href: "/live",
+      color: "text-red-500",
+      bgColor: "bg-red-500/10",
+    },
+  ];
+
+  const steps = [
+    {
+      step: "01",
+      title: t("home.howItWorks.step1.title"),
+      description: t("home.howItWorks.step1.description"),
+    },
+    {
+      step: "02",
+      title: t("home.howItWorks.step2.title"),
+      description: t("home.howItWorks.step2.description"),
+    },
+    {
+      step: "03",
+      title: t("home.howItWorks.step3.title"),
+      description: t("home.howItWorks.step3.description"),
+    },
+  ];
+
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -44,25 +82,23 @@ export default function HomePage() {
           <div className="mx-auto max-w-3xl text-center">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary">
               <Zap className="h-4 w-4" />
-              스마트 링으로 더 스마트하게
+              {t("home.hero.title")}
             </div>
             <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
-              탁구 대회의{" "}
-              <span className="text-primary">새로운 기준</span>
+              {t("home.hero.titleHighlight")}
             </h1>
             <p className="mt-6 text-lg leading-8 text-muted-foreground">
-              FingerScore와 함께라면 대회 운영부터 점수 기록, 실시간 대진표까지
-              모든 것이 간편해집니다. 지금 바로 시작하세요.
+              {t("home.hero.description")}
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Button size="lg" asChild>
                 <Link href="/tournaments">
-                  대회 찾아보기
+                  {t("nav.tournaments")}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link href="/signup">회원가입</Link>
+                <Link href="/auth/signup">{t("common.signup")}</Link>
               </Button>
             </div>
           </div>
@@ -74,11 +110,8 @@ export default function HomePage() {
         <div className="container max-w-screen-2xl">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              탁구 대회를 위한 모든 것
+              {t("home.features.title")}
             </h2>
-            <p className="mt-4 text-muted-foreground">
-              대회 참가, 커뮤니티, 랭킹, 라이브 관전까지 한 곳에서
-            </p>
           </div>
           <div className="mx-auto mt-16 grid max-w-5xl gap-6 sm:grid-cols-2">
             {features.map((feature) => {
@@ -90,7 +123,9 @@ export default function HomePage() {
                 >
                   <Link href={feature.href} className="absolute inset-0 z-10" />
                   <CardHeader>
-                    <div className={`mb-2 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-muted ${feature.color}`}>
+                    <div
+                      className={`mb-2 inline-flex h-12 w-12 items-center justify-center rounded-lg ${feature.bgColor} ${feature.color}`}
+                    >
                       <Icon className="h-6 w-6" />
                     </div>
                     <CardTitle className="flex items-center gap-2">
@@ -107,34 +142,15 @@ export default function HomePage() {
       </section>
 
       {/* How it works */}
-      <section className="bg-card/50 py-20">
+      <section className="bg-muted/30 py-20">
         <div className="container max-w-screen-2xl">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              이렇게 진행됩니다
+              {t("home.howItWorks.title")}
             </h2>
-            <p className="mt-4 text-muted-foreground">
-              대회 운영부터 실시간 점수 업데이트까지, 간단한 3단계
-            </p>
           </div>
-          <div className="mx-auto mt-16 grid max-4xl gap-8 sm:grid-cols-3">
-            {[
-              {
-                step: "01",
-                title: "대회 참가 신청",
-                description: "원하는 대회를 찾아 참가 신청을 합니다. 대회 운영진이 확정하면 알림을 받습니다.",
-              },
-              {
-                step: "02",
-                title: "경기 & 점수 제출",
-                description: "경기 후 스마트폰으로 점수를 제출합니다. 운영진이 승인하면 즉시 반영됩니다.",
-              },
-              {
-                step: "03",
-                title: "실시간 대진표",
-                description: "모든 참가자가 실시간으로 대진표를 확인할 수 있습니다. 다음 상대도 바로 확인!",
-              },
-            ].map((item) => (
+          <div className="mx-auto mt-16 grid max-w-4xl gap-8 sm:grid-cols-3">
+            {steps.map((item) => (
               <div key={item.step} className="relative text-center">
                 <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-primary text-2xl font-bold text-primary-foreground">
                   {item.step}
@@ -154,19 +170,16 @@ export default function HomePage() {
         <div className="container max-w-screen-2xl">
           <Card className="relative overflow-hidden bg-gradient-to-r from-primary/10 via-primary/5 to-transparent">
             <CardContent className="flex flex-col items-center gap-6 p-12 text-center">
-              <h2 className="text-3xl font-bold">지금 시작하세요</h2>
+              <h2 className="text-3xl font-bold">{t("home.cta.title")}</h2>
               <p className="max-w-xl text-muted-foreground">
-                FingerScore와 함께 탁구 대회의 새로운 경험을 시작하세요.
-                무료로 가입하고 첫 대회에 참가해보세요.
+                {t("home.cta.description")}
               </p>
-              <div className="flex gap-4">
-                <Button size="lg" asChild>
-                  <Link href="/signup">
-                    무료 회원가입
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-              </div>
+              <Button size="lg" asChild>
+                <Link href="/auth/signup">
+                  {t("common.signup")}
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
             </CardContent>
           </Card>
         </div>

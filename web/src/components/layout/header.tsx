@@ -1,21 +1,49 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Menu, Trophy, Users, BarChart3, Radio, User } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
+import {
+  Menu,
+  Trophy,
+  Users,
+  BarChart3,
+  Radio,
+  User,
+  LogOut,
+  Settings,
+  LayoutDashboard,
+  Globe,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/auth-context";
 
-const navigation = [
-  { name: "대회", href: "/tournaments", icon: Trophy },
-  { name: "커뮤니티", href: "/community", icon: Users },
-  { name: "랭킹", href: "/rankings", icon: BarChart3 },
-  { name: "라이브", href: "/live", icon: Radio },
+const navigationItems = [
+  { key: "tournaments", href: "/tournaments", icon: Trophy },
+  { key: "community", href: "/community", icon: Users },
+  { key: "rankings", href: "/rankings", icon: BarChart3 },
+  { key: "live", href: "/live", icon: Radio },
 ];
 
 export function Header() {
+  const t = useTranslations();
   const pathname = usePathname();
+  const { user, profile, signOut, isLoading } = useAuth();
+
+  const navigation = navigationItems.map((item) => ({
+    ...item,
+    name: t(`nav.${item.key}`),
+  }));
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -23,7 +51,9 @@ export function Header() {
         {/* Logo */}
         <Link href="/" className="mr-6 flex items-center space-x-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary">
-            <span className="text-sm font-bold text-primary-foreground">FS</span>
+            <span className="text-sm font-bold text-primary-foreground">
+              FS
+            </span>
           </div>
           <span className="hidden font-bold sm:inline-block">FingerScore</span>
         </Link>
@@ -51,12 +81,80 @@ export function Header() {
 
         {/* Right side - Auth buttons */}
         <div className="flex flex-1 items-center justify-end gap-2">
-          <Button variant="ghost" size="sm" asChild className="hidden md:flex">
-            <Link href="/login">로그인</Link>
-          </Button>
-          <Button size="sm" asChild className="hidden md:flex">
-            <Link href="/signup">회원가입</Link>
-          </Button>
+          {!isLoading && (
+            <>
+              {user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="relative h-8 w-8 rounded-full"
+                    >
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={profile?.avatar_url || ""} />
+                        <AvatarFallback>
+                          {profile?.display_name?.[0] || user.email?.[0] || "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">
+                          {profile?.display_name || "사용자"}
+                        </p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                          {user.email}
+                        </p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link href="/dashboard" className="cursor-pointer">
+                        <LayoutDashboard className="mr-2 h-4 w-4" />
+                        {t("dashboard.title")}
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile" className="cursor-pointer">
+                        <User className="mr-2 h-4 w-4" />
+                        {t("profile.title")}
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/settings" className="cursor-pointer">
+                        <Settings className="mr-2 h-4 w-4" />
+                        {t("settings.title")}
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      className="cursor-pointer text-red-600"
+                      onClick={() => signOut()}
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      {t("common.logout")}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    asChild
+                    className="hidden md:flex"
+                  >
+                    <Link href="/auth/login">{t("common.login")}</Link>
+                  </Button>
+                  <Button size="sm" asChild className="hidden md:flex">
+                    <Link href="/auth/signup">{t("common.signup")}</Link>
+                  </Button>
+                </>
+              )}
+            </>
+          )}
 
           {/* Mobile menu */}
           <Sheet>
@@ -88,13 +186,39 @@ export function Header() {
                   );
                 })}
                 <div className="border-t border-border my-2" />
-                <Link
-                  href="/login"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
-                >
-                  <User className="h-5 w-5" />
-                  로그인
-                </Link>
+                {user ? (
+                  <>
+                    <Link
+                      href="/dashboard"
+                      className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+                    >
+                      <LayoutDashboard className="h-5 w-5" />
+                      {t("dashboard.title")}
+                    </Link>
+                    <Link
+                      href="/profile"
+                      className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+                    >
+                      <User className="h-5 w-5" />
+                      {t("profile.title")}
+                    </Link>
+                    <button
+                      onClick={() => signOut()}
+                      className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
+                    >
+                      <LogOut className="h-5 w-5" />
+                      {t("common.logout")}
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    href="/auth/login"
+                    className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+                  >
+                    <User className="h-5 w-5" />
+                    {t("common.login")}
+                  </Link>
+                )}
               </nav>
             </SheetContent>
           </Sheet>

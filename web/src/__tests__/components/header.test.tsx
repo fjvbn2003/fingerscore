@@ -11,28 +11,30 @@ describe("Header", () => {
 
   it("renders navigation links", () => {
     render(<Header />);
-    expect(screen.getByText("대회")).toBeInTheDocument();
-    expect(screen.getByText("커뮤니티")).toBeInTheDocument();
-    expect(screen.getByText("랭킹")).toBeInTheDocument();
-    expect(screen.getByText("라이브")).toBeInTheDocument();
+    // Using translation keys since we mock useTranslations
+    expect(screen.getByText("nav.tournaments")).toBeInTheDocument();
+    expect(screen.getByText("nav.community")).toBeInTheDocument();
+    expect(screen.getByText("nav.rankings")).toBeInTheDocument();
+    expect(screen.getByText("nav.live")).toBeInTheDocument();
   });
 
-  it("renders auth buttons on desktop", () => {
+  it("renders auth buttons when not logged in", () => {
     render(<Header />);
-    const loginButtons = screen.getAllByText("로그인");
-    const signupButton = screen.getByText("회원가입");
+    // Both desktop and mobile versions
+    const loginButtons = screen.getAllByText("common.login");
+    const signupButtons = screen.getAllByText("common.signup");
 
     expect(loginButtons.length).toBeGreaterThan(0);
-    expect(signupButton).toBeInTheDocument();
+    expect(signupButtons.length).toBeGreaterThan(0);
   });
 
   it("has correct navigation hrefs", () => {
     render(<Header />);
 
-    const tournamentsLink = screen.getByRole("link", { name: /대회/i });
-    const communityLink = screen.getByRole("link", { name: /커뮤니티/i });
-    const rankingsLink = screen.getByRole("link", { name: /랭킹/i });
-    const liveLink = screen.getByRole("link", { name: /라이브/i });
+    const tournamentsLink = screen.getByRole("link", { name: /nav.tournaments/i });
+    const communityLink = screen.getByRole("link", { name: /nav.community/i });
+    const rankingsLink = screen.getByRole("link", { name: /nav.rankings/i });
+    const liveLink = screen.getByRole("link", { name: /nav.live/i });
 
     expect(tournamentsLink).toHaveAttribute("href", "/tournaments");
     expect(communityLink).toHaveAttribute("href", "/community");
