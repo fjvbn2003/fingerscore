@@ -1,0 +1,40 @@
+# Development 환경 설정
+global:
+  environment: development
+  domain: dev.fingerscore.app
+
+replicaCount: 1
+
+image:
+  tag: dev
+  pullPolicy: Always
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+autoscaling:
+  enabled: false
+
+ingress:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+  hosts:
+    - host: dev.fingerscore.app
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: fingerscore-dev-tls
+      hosts:
+        - dev.fingerscore.app
+
+certManager:
+  staging: true
+
+podDisruptionBudget:
+  enabled: false

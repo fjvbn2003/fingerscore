@@ -1,0 +1,187 @@
+# FingerScore Helm Chart Values
+# 기본값 - 환경별로 override 가능
+
+# 전역 설정
+global:
+  environment: production
+  domain: fingerscore.app
+
+# 레플리카 수
+replicaCount: 2
+
+# 이미지 설정
+image:
+  repository: ghcr.io/fjvbn2003/fingerscore
+  tag: latest
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+# 서비스 계정
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+# Pod 설정
+podAnnotations: {}
+podSecurityContext:
+  fsGroup: 1000
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+# 서비스 설정
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 3000
+
+# Ingress 설정 (with TLS/인증서)
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+  hosts:
+    - host: fingerscore.app
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: www.fingerscore.app
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: fingerscore-tls
+      hosts:
+        - fingerscore.app
+        - www.fingerscore.app
+
+# 리소스 제한
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# 오토스케일링
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+# 노드 선택
+nodeSelector: {}
+
+tolerations: []
+
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                  - fingerscore
+          topologyKey: kubernetes.io/hostname
+
+# 헬스체크
+livenessProbe:
+  httpGet:
+    path: /api/health
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /api/health
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+# 환경 변수 (일반)
+env:
+  NODE_ENV: production
+  NEXT_TELEMETRY_DISABLED: "1"
+
+# 환경 변수 (시크릿 참조)
+envFromSecrets:
+  - name: NEXT_PUBLIC_SUPABASE_URL
+    secretName: fingerscore-secrets
+    secretKey: supabase-url
+  - name: NEXT_PUBLIC_SUPABASE_ANON_KEY
+    secretName: fingerscore-secrets
+    secretKey: supabase-anon-key
+  - name: SUPABASE_SERVICE_ROLE_KEY
+    secretName: fingerscore-secrets
+    secretKey: supabase-service-role-key
+
+# ConfigMap 데이터
+configMap:
+  data:
+    NEXT_PUBLIC_APP_URL: "https://fingerscore.app"
+    DEFAULT_LOCALE: "ko"
+
+# PostgreSQL (선택적 - Supabase 사용 시 비활성화)
+postgresql:
+  enabled: false
+  auth:
+    username: fingerscore
+    password: ""  # secrets에서 관리
+    database: fingerscore
+  primary:
+    persistence:
+      size: 10Gi
+
+# Redis (세션/캐시용 - 선택적)
+redis:
+  enabled: false
+  auth:
+    enabled: true
+    password: ""  # secrets에서 관리
+  master:
+    persistence:
+      size: 1Gi
+
+# cert-manager ClusterIssuer 설정
+certManager:
+  enabled: true
+  email: admin@fingerscore.app
+  # staging: true  # 테스트 시 활성화 (rate limit 방지)
+
+# PodDisruptionBudget
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+# NetworkPolicy
+networkPolicy:
+  enabled: false
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx

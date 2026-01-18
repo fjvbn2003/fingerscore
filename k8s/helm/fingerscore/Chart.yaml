@@ -1,0 +1,23 @@
+apiVersion: v2
+name: fingerscore
+description: FingerScore - Table Tennis Score Management Platform
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - table-tennis
+  - scoreboard
+  - sports
+  - nextjs
+maintainers:
+  - name: FingerScore Team
+    email: support@fingerscore.app
+dependencies:
+  - name: postgresql
+    version: "13.2.24"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: postgresql.enabled
+  - name: redis
+    version: "18.6.1"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: redis.enabled

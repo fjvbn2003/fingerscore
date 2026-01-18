@@ -1,0 +1,53 @@
+{{- if .Values.certManager.enabled }}
+---
+# Let's Encrypt ClusterIssuer (Production)
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: {{ .Values.certManager.email }}
+    privateKeySecretRef:
+      name: letsencrypt-prod-account-key
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+
+---
+# Let's Encrypt ClusterIssuer (Staging - for testing)
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: {{ .Values.certManager.email }}
+    privateKeySecretRef:
+      name: letsencrypt-staging-account-key
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+
+---
+# Certificate resource (자동으로 Ingress에서 생성되지만, 명시적으로도 생성 가능)
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "fingerscore.fullname" . }}-cert
+  labels:
+    {{- include "fingerscore.labels" . | nindent 4 }}
+spec:
+  secretName: fingerscore-tls
+  issuerRef:
+    name: {{ if .Values.certManager.staging }}letsencrypt-staging{{ else }}letsencrypt-prod{{ end }}
+    kind: ClusterIssuer
+  commonName: {{ .Values.global.domain }}
+  dnsNames:
+    - {{ .Values.global.domain }}
+    - www.{{ .Values.global.domain }}
+{{- end }}
