@@ -1,0 +1,71 @@
+# Local Development/Testing 환경 설정 (Docker Desktop Kubernetes)
+global:
+  environment: local
+  domain: localhost
+
+replicaCount: 1
+
+image:
+  repository: fjvbn2003/fingerscore
+  tag: latest
+  pullPolicy: IfNotPresent
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+autoscaling:
+  enabled: false
+
+# 로컬에서는 Ingress 대신 NodePort 사용
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  hosts:
+    - host: fingerscore.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+# TLS 인증서 비활성화 (로컬)
+certManager:
+  enabled: false
+
+podDisruptionBudget:
+  enabled: false
+
+# 로컬 테스트용 - TCP 기반 probe (Supabase 없이도 동작)
+livenessProbe:
+  httpGet: null
+  tcpSocket:
+    port: http
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet: null
+  tcpSocket:
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+# 환경 변수
+env:
+  NODE_ENV: production
+  NEXT_TELEMETRY_DISABLED: "1"
+
+configMap:
+  data:
+    NEXT_PUBLIC_APP_URL: "http://localhost:30080"
+    DEFAULT_LOCALE: "ko"
