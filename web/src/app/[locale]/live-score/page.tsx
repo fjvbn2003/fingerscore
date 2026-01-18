@@ -138,7 +138,8 @@ export default function LiveScorePage() {
     const config = sportScoringConfig[sportType];
     if (sportType === "TENNIS") {
       // Tennis scoring is complex, simplified here
-      const minGames = config.gamesPerSet;
+      const tennisConfig = config as typeof sportScoringConfig.TENNIS;
+      const minGames = tennisConfig.gamesPerSet;
       if (scoreA >= minGames && scoreA - scoreB >= 2) return "A";
       if (scoreB >= minGames && scoreB - scoreA >= 2) return "B";
       // Tiebreak at 7-6
@@ -147,8 +148,9 @@ export default function LiveScorePage() {
       return null;
     } else {
       // Table tennis & Badminton
-      const pointsToWin = config.pointsToWin;
-      const maxPoints = config.maxPoints;
+      const pointConfig = config as typeof sportScoringConfig.TABLE_TENNIS;
+      const pointsToWin = pointConfig.pointsToWin;
+      const maxPoints = pointConfig.maxPoints;
       const diff = Math.abs(scoreA - scoreB);
 
       if (scoreA >= pointsToWin && diff >= 2) return "A";
@@ -182,12 +184,12 @@ export default function LiveScorePage() {
     setSetScores(newSetScores);
 
     // Check for set win
-    const setWinner = checkSetWin(currentScore.playerA, currentScore.playerB);
-    if (setWinner) {
+    const setWinResult = checkSetWin(currentScore.playerA, currentScore.playerB);
+    if (setWinResult) {
       let newSetsA = setsWonA;
       let newSetsB = setsWonB;
 
-      if (setWinner === "A") {
+      if (setWinResult === "A") {
         newSetsA++;
         setSetsWonA(newSetsA);
       } else {

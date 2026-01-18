@@ -282,7 +282,7 @@ export default function MatchRecordPage() {
     // Check match validity
     const matchValidation = config.validateMatch(setsWon.a, setsWon.b);
     if (!matchValidation.valid) {
-      setValidationError(matchValidation.error);
+      setValidationError(matchValidation.error || null);
       return false;
     }
 
