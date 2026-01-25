@@ -1,6 +1,17 @@
 # Common
 .DS_Store
 .vscode/
+.idea/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Claude Code skills (auto-downloaded)
+.claude/commands/
+.claude/skills/
 
 # Arduino/Firmware
 build/
@@ -24,5 +35,19 @@ local.properties
 bin/
 *.class
 
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Next.js
+.next/
+out/
+
 # Logs
 *.log
+
+# OS files
+Thumbs.db
