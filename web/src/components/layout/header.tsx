@@ -92,7 +92,7 @@ export function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex md:flex-1 md:items-center md:gap-1">
+        <nav className="hidden lg:flex lg:flex-1 lg:items-center lg:gap-0.5 overflow-x-auto">
           {navigation.map((item) => {
             const Icon = item.icon;
             const isActive = pathname.startsWith(item.href);
@@ -101,7 +101,7 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "relative flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200",
+                  "relative flex items-center gap-1.5 px-2.5 py-2 text-sm font-medium rounded-lg transition-all duration-200 whitespace-nowrap shrink-0",
                   isActive
                     ? "text-white"
                     : "text-muted-foreground hover:text-foreground hover:bg-white/5"
@@ -110,7 +110,7 @@ export function Header() {
                 {isActive && (
                   <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-emerald-500/20 to-blue-500/20 border border-emerald-500/30" />
                 )}
-                <Icon className={cn("relative h-4 w-4", isActive && item.color)} />
+                <Icon className={cn("relative h-4 w-4 shrink-0", isActive && item.color)} />
                 <span className="relative">{item.name}</span>
               </Link>
             );
@@ -198,7 +198,7 @@ export function Header() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <div className="hidden md:flex items-center gap-2">
+                <div className="hidden lg:flex items-center gap-2">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -222,7 +222,7 @@ export function Header() {
           {/* Mobile menu */}
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden h-10 w-10 hover:bg-white/5">
+              <Button variant="ghost" size="icon" className="lg:hidden h-10 w-10 hover:bg-white/5">
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">메뉴 열기</span>
               </Button>
