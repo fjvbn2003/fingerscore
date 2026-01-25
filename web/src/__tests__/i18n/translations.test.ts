@@ -62,15 +62,21 @@ describe("Translation Files", () => {
   });
 
   it("navigation translations are complete", () => {
-    expect(ko.nav.tournaments).toBe("대회");
+    expect(ko.nav.places).toBe("탁구장");
+    expect(ko.nav.equipment).toBe("장비");
+    expect(ko.nav.lessons).toBe("교실");
+    expect(ko.nav.matching).toBe("매칭");
+    expect(ko.nav.market).toBe("장터");
     expect(ko.nav.community).toBe("커뮤니티");
     expect(ko.nav.rankings).toBe("랭킹");
-    expect(ko.nav.live).toBe("라이브");
 
-    expect(en.nav.tournaments).toBe("Tournaments");
+    expect(en.nav.places).toBe("Clubs");
+    expect(en.nav.equipment).toBe("Gear");
+    expect(en.nav.lessons).toBe("Academy");
+    expect(en.nav.matching).toBe("Match");
+    expect(en.nav.market).toBe("Market");
     expect(en.nav.community).toBe("Community");
     expect(en.nav.rankings).toBe("Rankings");
-    expect(en.nav.live).toBe("Live");
   });
 
   it("sport types are translated", () => {

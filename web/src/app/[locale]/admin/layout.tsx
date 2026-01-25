@@ -54,14 +54,14 @@ export default function AdminLayout({
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed top-16 left-0 z-50 h-[calc(100vh-4rem)] transition-all duration-300 glass-card border-r border-white/5",
+          "fixed top-16 left-0 z-50 h-[calc(100vh-4rem)] transition-all duration-300 glass-card border-r border-border dark:border-white/5",
           collapsed ? "w-20" : "w-64",
           sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}
       >
         <div className="flex h-full flex-col">
           {/* Sidebar Header */}
-          <div className="flex items-center justify-between p-4 border-b border-white/10">
+          <div className="flex items-center justify-between p-4 border-b border-border dark:border-white/10">
             {!collapsed && (
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg">
@@ -76,7 +76,7 @@ export default function AdminLayout({
             <Button
               variant="ghost"
               size="icon"
-              className="hidden md:flex hover:bg-white/5"
+              className="hidden md:flex hover:bg-muted dark:hover:bg-white/5"
               onClick={() => setCollapsed(!collapsed)}
             >
               <ChevronLeft
@@ -89,7 +89,7 @@ export default function AdminLayout({
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden hover:bg-white/5"
+              className="md:hidden hover:bg-muted dark:hover:bg-white/5"
               onClick={() => setSidebarOpen(false)}
             >
               <X className="h-4 w-4" />
@@ -112,14 +112,14 @@ export default function AdminLayout({
                     "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all",
                     collapsed && "justify-center px-0",
                     isActive
-                      ? "bg-gradient-to-r from-amber-500/20 to-orange-500/20 text-amber-400 border border-amber-500/30"
-                      : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                      ? "bg-gradient-to-r from-amber-500/10 to-orange-500/10 dark:from-amber-500/20 dark:to-orange-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30"
+                      : "text-muted-foreground hover:bg-muted dark:hover:bg-white/5 hover:text-foreground"
                   )}
                 >
                   <Icon
                     className={cn(
                       "h-5 w-5 flex-shrink-0",
-                      isActive && "text-amber-400"
+                      isActive && "text-amber-600 dark:text-amber-400"
                     )}
                   />
                   {!collapsed && (
@@ -147,11 +147,11 @@ export default function AdminLayout({
           </nav>
 
           {/* Back to main site */}
-          <div className="p-3 border-t border-white/10">
+          <div className="p-3 border-t border-border dark:border-white/10">
             <Link
               href="/"
               className={cn(
-                "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground hover:bg-white/5 hover:text-foreground transition-all",
+                "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground hover:bg-muted dark:hover:bg-white/5 hover:text-foreground transition-all",
                 collapsed && "justify-center px-0"
               )}
             >
@@ -170,11 +170,11 @@ export default function AdminLayout({
         )}
       >
         {/* Mobile header */}
-        <div className="sticky top-16 z-30 flex items-center gap-4 glass border-b border-white/5 p-4 md:hidden">
+        <div className="sticky top-16 z-30 flex items-center gap-4 glass border-b border-border dark:border-white/5 p-4 md:hidden">
           <Button
             variant="ghost"
             size="icon"
-            className="hover:bg-white/5"
+            className="hover:bg-muted dark:hover:bg-white/5"
             onClick={() => setSidebarOpen(true)}
           >
             <Menu className="h-5 w-5" />

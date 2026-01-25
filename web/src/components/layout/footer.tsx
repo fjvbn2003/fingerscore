@@ -3,9 +3,15 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Mail, Phone, MessageSquare } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export function Footer() {
   const t = useTranslations();
+  const [year, setYear] = useState<number | null>(null);
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
 
   return (
     <footer className="border-t border-slate-800 bg-slate-900/80 backdrop-blur">
@@ -158,7 +164,7 @@ export function Footer() {
         <div className="mt-12 pt-8 border-t border-slate-800">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-500">
             <p>
-              &copy; {new Date().getFullYear()} FingerScore. All rights reserved.
+              &copy; {year ?? "2025"} FingerScore. All rights reserved.
             </p>
             <div className="flex items-center gap-2">
               <span>🇰🇷</span>

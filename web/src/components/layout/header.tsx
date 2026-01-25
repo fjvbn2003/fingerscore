@@ -8,7 +8,6 @@ import {
   Trophy,
   Users,
   BarChart3,
-  Radio,
   User,
   LogOut,
   Settings,
@@ -16,6 +15,11 @@ import {
   Gamepad2,
   Sparkles,
   X,
+  MapPin,
+  Package,
+  GraduationCap,
+  UserPlus,
+  Tag,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
@@ -31,13 +35,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/auth-context";
 import { NotificationDropdown } from "@/components/notification/notification-dropdown";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const navigationItems = [
-  { key: "tournaments", href: "/tournaments", icon: Trophy, color: "text-amber-400" },
+  { key: "places", href: "/places", icon: MapPin, color: "text-orange-400" },
+  { key: "equipment", href: "/equipment", icon: Package, color: "text-cyan-400" },
+  { key: "lessons", href: "/lessons", icon: GraduationCap, color: "text-pink-400" },
+  { key: "matching", href: "/matching", icon: UserPlus, color: "text-violet-400" },
+  { key: "market", href: "/market", icon: Tag, color: "text-amber-400" },
   { key: "community", href: "/community", icon: Users, color: "text-blue-400" },
   { key: "rankings", href: "/rankings", icon: BarChart3, color: "text-emerald-400" },
-  { key: "live", href: "/live", icon: Radio, color: "text-red-400" },
-  { key: "tools", href: "/tools", icon: Gamepad2, color: "text-purple-400" },
 ];
 
 export function Header() {
@@ -111,7 +118,8 @@ export function Header() {
         </nav>
 
         {/* Right side */}
-        <div className="flex flex-1 items-center justify-end gap-3">
+        <div className="flex flex-1 items-center justify-end gap-2">
+          <ThemeToggle />
           {!isLoading && (
             <>
               {user && <NotificationDropdown />}

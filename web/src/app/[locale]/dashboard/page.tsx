@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import {
@@ -19,6 +20,10 @@ import {
   ArrowDownRight,
   Clock,
   Sparkles,
+  Gift,
+  Sword,
+  Shield,
+  Crown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -125,14 +130,82 @@ const mockRecentActivity = [
   },
 ];
 
+// 일일 미션 데이터
+const mockDailyMissions = [
+  { id: 1, title: "첫 경기 참여", emoji: "🏓", progress: 1, max: 1, xp: 50, completed: true },
+  { id: 2, title: "3경기 플레이", emoji: "🔥", progress: 2, max: 3, xp: 100, completed: false },
+  { id: 3, title: "승리 1회", emoji: "🏆", progress: 1, max: 1, xp: 75, completed: true },
+  { id: 4, title: "커뮤니티 활동", emoji: "💬", progress: 0, max: 1, xp: 30, completed: false },
+];
+
+// 업적 데이터
+const mockAchievements = [
+  { id: 1, emoji: "🌟", name: "첫 발걸음", desc: "첫 경기 완료", unlocked: true, rarity: "common" },
+  { id: 2, emoji: "🔥", name: "불타는 연승", desc: "5연승 달성", unlocked: true, rarity: "rare" },
+  { id: 3, emoji: "💎", name: "다이아 등급", desc: "2000 RP 달성", unlocked: false, rarity: "epic", progress: 85 },
+  { id: 4, emoji: "👑", name: "전설의 탄생", desc: "2500 RP 달성", unlocked: false, rarity: "legendary", progress: 68 },
+];
+
+// 재밌는 팁들
+const funTips = [
+  "💡 탁구공은 시속 112km까지 날아갈 수 있어요!",
+  "🏓 탁구는 1988년 서울 올림픽부터 정식 종목이에요",
+  "🧠 탁구는 '체스를 하면서 100m 달리기'라고 불려요",
+  "🌍 전 세계 탁구 인구는 약 3억명이에요",
+  "⚡ 프로 선수는 0.25초 만에 반응해요",
+];
+
 export default function DashboardPage() {
   const t = useTranslations();
   const { profile } = useAuth();
   const displayName = profile?.display_name || "사용자";
   const tierInfo = getTierInfo(mockStats.rating);
 
+  // 재밌는 팁 랜덤 표시
+  const [currentTip, setCurrentTip] = useState(0);
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTip((prev) => (prev + 1) % funTips.length);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // 미션 완료 시 confetti 효과
+  const handleMissionClaim = () => {
+    setShowConfetti(true);
+    setTimeout(() => setShowConfetti(false), 3000);
+  };
+
   return (
-    <div className="container max-w-screen-xl py-8 px-4 md:px-6">
+    <div className="container max-w-screen-xl py-8 px-4 md:px-6relative">
+      {/* Confetti Effect */}
+      {showConfetti && (
+        <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+          {[...Array(50)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute animate-confetti"
+              style={{
+                left: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 0.5}s`,
+                fontSize: `${Math.random() * 20 + 10}px`,
+              }}
+            >
+              {['🎉', '🎊', '⭐', '🏆', '✨'][Math.floor(Math.random() * 5)]}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Fun Tip Banner */}
+      <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20">
+        <p className="text-sm text-center animate-fade-in" key={currentTip}>
+          {funTips[currentTip]}
+        </p>
+      </div>
+
       {/* Welcome Header */}
       <div className="mb-8">
         <div className="flex items-center gap-2 text-muted-foreground mb-2">
@@ -147,7 +220,7 @@ export default function DashboardPage() {
           </span>
         </div>
         <h1 className="text-3xl font-bold">
-          {t("dashboard.welcome", { name: displayName })}
+          {t("dashboard.welcome", { name: displayName })} 👋
         </h1>
         <p className="mt-1 text-muted-foreground">
           오늘의 활동과 경기 일정을 확인하세요
@@ -257,6 +330,60 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Daily Missions */}
+      <Card className="glass-card border-white/5 mb-8">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <Gift className="h-5 w-5 text-purple-400" />
+              🎯 오늘의 미션
+            </CardTitle>
+            <Badge variant="secondary" className="bg-purple-500/20 text-purple-400">
+              +{mockDailyMissions.filter(m => m.completed).reduce((a, b) => a + b.xp, 0)} XP 획득 가능
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {mockDailyMissions.map((mission) => (
+              <div
+                key={mission.id}
+                className={`relative rounded-xl p-4 transition-all ${
+                  mission.completed
+                    ? "bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 border border-emerald-500/30"
+                    : "glass border border-white/10 hover:border-white/20"
+                }`}
+              >
+                {mission.completed && (
+                  <div className="absolute top-2 right-2">
+                    <span className="text-lg">✅</span>
+                  </div>
+                )}
+                <div className="text-3xl mb-2">{mission.emoji}</div>
+                <p className="font-medium text-sm mb-1">{mission.title}</p>
+                <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
+                  <span>{mission.progress}/{mission.max}</span>
+                  <span className="text-amber-400">+{mission.xp} XP</span>
+                </div>
+                <Progress
+                  value={(mission.progress / mission.max) * 100}
+                  className="h-1.5"
+                />
+                {mission.completed && (
+                  <Button
+                    size="sm"
+                    className="w-full mt-3 bg-emerald-500 hover:bg-emerald-600 text-white text-xs"
+                    onClick={handleMissionClaim}
+                  >
+                    보상 받기 🎁
+                  </Button>
+                )}
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Main Content */}
@@ -499,6 +626,63 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
+          {/* Achievements Showcase */}
+          <Card className="glass-card border-white/5">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Crown className="h-5 w-5 text-amber-400" />
+                🏅 업적
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {mockAchievements.map((achievement) => (
+                <div
+                  key={achievement.id}
+                  className={`flex items-center gap-3 rounded-xl p-3 transition-all ${
+                    achievement.unlocked
+                      ? "bg-gradient-to-r from-amber-500/10 to-transparent border border-amber-500/20"
+                      : "glass opacity-60"
+                  }`}
+                >
+                  <div className={`text-2xl ${!achievement.unlocked && "grayscale"}`}>
+                    {achievement.unlocked ? achievement.emoji : "🔒"}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium text-sm">{achievement.name}</p>
+                      <Badge
+                        variant="outline"
+                        className={`text-[10px] px-1.5 py-0 ${
+                          achievement.rarity === "legendary"
+                            ? "border-amber-400 text-amber-400"
+                            : achievement.rarity === "epic"
+                            ? "border-purple-400 text-purple-400"
+                            : achievement.rarity === "rare"
+                            ? "border-blue-400 text-blue-400"
+                            : "border-gray-400 text-gray-400"
+                        }`}
+                      >
+                        {achievement.rarity.toUpperCase()}
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-muted-foreground">{achievement.desc}</p>
+                    {!achievement.unlocked && achievement.progress && (
+                      <Progress value={achievement.progress} className="h-1 mt-1.5" />
+                    )}
+                  </div>
+                  {achievement.unlocked && (
+                    <div className="text-emerald-400">✓</div>
+                  )}
+                </div>
+              ))}
+              <Button variant="ghost" size="sm" className="w-full text-muted-foreground hover:text-foreground" asChild>
+                <Link href="/achievements">
+                  모든 업적 보기 <ChevronRight className="ml-1 h-4 w-4" />
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+
           {/* Quick Actions */}
           <Card className="glass-card border-white/5">
             <CardHeader>
@@ -529,6 +713,37 @@ export default function DashboardPage() {
                   커뮤니티
                 </Link>
               </Button>
+            </CardContent>
+          </Card>
+
+          {/* Today's Challenge */}
+          <Card className="glass-card border-white/5 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 via-orange-500/10 to-amber-500/10" />
+            <CardContent className="relative p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <Sword className="h-5 w-5 text-red-400" />
+                <h3 className="font-bold">⚔️ 오늘의 도전</h3>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">
+                동급 상대에게 3연승하고 특별 보상을 획득하세요!
+              </p>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <Shield className="h-4 w-4 text-blue-400" />
+                  <span className="text-sm">진행률</span>
+                </div>
+                <span className="text-sm font-bold">1/3</span>
+              </div>
+              <Progress value={33} className="h-2 mb-4" />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1">
+                  <span className="text-amber-400">🏆</span>
+                  <span className="text-sm font-medium">보상: 500 XP + 레어 칭호</span>
+                </div>
+                <Badge variant="secondary" className="bg-red-500/20 text-red-400 text-xs">
+                  8시간 남음
+                </Badge>
+              </div>
             </CardContent>
           </Card>
         </div>

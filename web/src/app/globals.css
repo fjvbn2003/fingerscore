@@ -55,6 +55,54 @@
 :root {
   --radius: 0.625rem;
 
+  /* FingerScore Design System - Light Theme */
+  --background: #FAFBFC;
+  --foreground: #1A1F2C;
+  --card: #FFFFFF;
+  --card-foreground: #1A1F2C;
+  --popover: #FFFFFF;
+  --popover-foreground: #1A1F2C;
+  --primary: #059669;
+  --primary-foreground: #FFFFFF;
+  --secondary: #2563EB;
+  --secondary-foreground: #FFFFFF;
+  --muted: #F1F5F9;
+  --muted-foreground: #64748B;
+  --accent: #2563EB;
+  --accent-foreground: #FFFFFF;
+  --destructive: #DC2626;
+  --border: #E2E8F0;
+  --input: #E2E8F0;
+  --ring: #059669;
+  --chart-1: #059669;
+  --chart-2: #2563EB;
+  --chart-3: #DC2626;
+  --chart-4: #D97706;
+  --chart-5: #7C3AED;
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #1A1F2C;
+  --sidebar-primary: #059669;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F1F5F9;
+  --sidebar-accent-foreground: #1A1F2C;
+  --sidebar-border: #E2E8F0;
+  --sidebar-ring: #059669;
+
+  /* Custom FingerScore colors - Light */
+  --fs-green: #059669;
+  --fs-green-glow: rgba(5, 150, 105, 0.2);
+  --fs-blue: #2563EB;
+  --fs-blue-glow: rgba(37, 99, 235, 0.2);
+  --fs-red: #DC2626;
+  --fs-purple: #7C3AED;
+  --fs-amber: #D97706;
+  --fs-glass: rgba(0, 0, 0, 0.02);
+  --fs-glass-border: rgba(0, 0, 0, 0.06);
+  --fs-gradient-start: #059669;
+  --fs-gradient-end: #2563EB;
+}
+
+.dark {
   /* FingerScore Design System - Dark Theme (matches Android app) */
   --background: #0a0f1a;
   --foreground: #F8FAFC;
@@ -88,7 +136,7 @@
   --sidebar-border: rgba(255, 255, 255, 0.08);
   --sidebar-ring: #10B981;
 
-  /* Custom FingerScore colors */
+  /* Custom FingerScore colors - Dark */
   --fs-green: #10B981;
   --fs-green-glow: rgba(16, 185, 129, 0.4);
   --fs-blue: #3B82F6;
@@ -109,9 +157,15 @@
   body {
     @apply bg-background text-foreground antialiased;
     background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(5, 150, 105, 0.08), transparent),
+      radial-gradient(ellipse 60% 40% at 100% 100%, rgba(37, 99, 235, 0.05), transparent);
+    background-attachment: fixed;
+  }
+  .dark body,
+  body:is(.dark *) {
+    background-image:
       radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16, 185, 129, 0.15), transparent),
       radial-gradient(ellipse 60% 40% at 100% 100%, rgba(59, 130, 246, 0.1), transparent);
-    background-attachment: fixed;
   }
 
   /* Custom scrollbar */
@@ -166,9 +220,16 @@
   }
 
   .glass-card {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.6) 100%);
     backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  }
+
+  .dark .glass-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
     border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: none;
   }
 
   .gradient-text {
@@ -236,5 +297,84 @@
   .hover-lift:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 40px -10px rgba(16, 185, 129, 0.2);
+  }
+
+  /* Confetti animation */
+  .animate-confetti {
+    animation: confetti-fall 3s ease-out forwards;
+  }
+
+  /* Fade in animation */
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  /* Bounce animation */
+  .animate-bounce-in {
+    animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  /* Wiggle animation */
+  .animate-wiggle {
+    animation: wiggle 0.5s ease-in-out;
+  }
+
+  /* Pulse glow */
+  .animate-pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-100vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg); }
+  75% { transform: rotate(10deg); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px var(--fs-green-glow);
+  }
+  50% {
+    box-shadow: 0 0 20px var(--fs-green-glow), 0 0 30px var(--fs-green-glow);
   }
 }

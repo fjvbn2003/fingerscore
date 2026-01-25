@@ -18,17 +18,11 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import type { BoardType } from "@/types/database";
+import { getRelativeTimeParts } from "@/lib/format-utils";
 
 const boardTypes: {
   type: BoardType;
@@ -109,20 +103,15 @@ const mockPosts = [
   },
 ];
 
-function formatRelativeTime(dateString: string) {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-
-  if (diffInSeconds < 60) return "방금 전";
-  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}분 전`;
-  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}시간 전`;
-  if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}일 전`;
-  return date.toLocaleDateString("ko-KR");
-}
-
 export default function CommunityPage() {
   const t = useTranslations();
+
+  // Helper to format relative time with translations
+  const formatRelativeTime = (dateString: string) => {
+    const parts = getRelativeTimeParts(dateString);
+    if (parts.fallbackDate) return parts.fallbackDate;
+    return t(parts.key, parts.values);
+  };
   const [searchQuery, setSearchQuery] = useState("");
   const [activeBoard, setActiveBoard] = useState<BoardType | "all">("all");
 
@@ -149,7 +138,7 @@ export default function CommunityPage() {
         <div>
           <h1 className="text-3xl font-bold">{t("community.title")}</h1>
           <p className="mt-1 text-muted-foreground">
-            탁구에 대한 이야기를 나눠보세요
+            {t("community.description")}
           </p>
         </div>
         <Button asChild>
@@ -185,10 +174,10 @@ export default function CommunityPage() {
                 </div>
                 <div>
                   <p className="font-medium">
-                    {t(`community.boards.${board.type.toLowerCase()}`)}
+                    {t(`community.boards.${board.type}`)}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {postCount}개의 글
+                    {t("community.postCount", { count: postCount })}
                   </p>
                 </div>
               </CardContent>
@@ -202,7 +191,7 @@ export default function CommunityPage() {
         <div className="relative max-w-md">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="게시글 검색..."
+            placeholder={t("community.searchPlaceholder")}
             className="pl-10"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -237,7 +226,7 @@ export default function CommunityPage() {
                         <Pin className="h-3 w-3 text-primary" />
                       )}
                       <Badge variant="outline" className="text-xs">
-                        {t(`community.boards.${post.board_type.toLowerCase()}`)}
+                        {t(`community.boards.${post.board_type}`)}
                       </Badge>
                     </div>
                     <h3 className="font-medium line-clamp-1">{post.title}</h3>

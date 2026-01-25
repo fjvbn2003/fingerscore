@@ -54,12 +54,16 @@ export function SportsQuotesTicker({
 }: SportsQuotesTickerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Shuffle quotes on mount
-  const [shuffledQuotes] = useState(() => {
-    return [...sportsQuotes].sort(() => Math.random() - 0.5);
-  });
+  // Shuffle quotes on client mount only to avoid hydration mismatch
+  const [shuffledQuotes, setShuffledQuotes] = useState(sportsQuotes);
+
+  useEffect(() => {
+    setIsMounted(true);
+    setShuffledQuotes([...sportsQuotes].sort(() => Math.random() - 0.5));
+  }, []);
 
   // Auto-advance quotes
   useEffect(() => {
@@ -83,6 +87,33 @@ export function SportsQuotesTicker({
     minimal: "bg-transparent",
     gradient: "bg-gradient-to-r from-emerald-900/30 via-blue-900/30 to-purple-900/30 border-y border-white/10",
   };
+
+  // Show first quote statically until client mounts
+  if (!isMounted) {
+    return (
+      <div
+        ref={containerRef}
+        className={cn(
+          "relative overflow-hidden py-2 px-4",
+          variantStyles[variant],
+          className
+        )}
+      >
+        <div className="flex items-center justify-center gap-3">
+          {showIcon && (
+            <Sparkles className="h-4 w-4 text-amber-400 flex-shrink-0" />
+          )}
+          <p className="text-sm text-slate-300 truncate">
+            <span className="italic">&ldquo;{sportsQuotes[0].quote}&rdquo;</span>
+            <span className="text-slate-500 ml-2">— {sportsQuotes[0].author}</span>
+          </p>
+          {showIcon && (
+            <Sparkles className="h-4 w-4 text-amber-400 flex-shrink-0" />
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

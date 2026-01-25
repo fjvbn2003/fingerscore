@@ -1,6 +1,16 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { Header } from "@/components/layout/header";
+
+// Mock the theme context
+vi.mock("@/contexts/theme-context", () => ({
+  useTheme: () => ({
+    theme: "dark",
+    setTheme: vi.fn(),
+    toggleTheme: vi.fn(),
+  }),
+  ThemeProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}));
 
 describe("Header", () => {
   it("renders the logo", () => {
@@ -12,10 +22,13 @@ describe("Header", () => {
   it("renders navigation links", () => {
     render(<Header />);
     // Using translation keys since we mock useTranslations
-    expect(screen.getByText("nav.tournaments")).toBeInTheDocument();
+    expect(screen.getByText("nav.places")).toBeInTheDocument();
+    expect(screen.getByText("nav.equipment")).toBeInTheDocument();
+    expect(screen.getByText("nav.lessons")).toBeInTheDocument();
+    expect(screen.getByText("nav.matching")).toBeInTheDocument();
+    expect(screen.getByText("nav.market")).toBeInTheDocument();
     expect(screen.getByText("nav.community")).toBeInTheDocument();
     expect(screen.getByText("nav.rankings")).toBeInTheDocument();
-    expect(screen.getByText("nav.live")).toBeInTheDocument();
   });
 
   it("renders auth buttons when not logged in", () => {
@@ -31,14 +44,12 @@ describe("Header", () => {
   it("has correct navigation hrefs", () => {
     render(<Header />);
 
-    const tournamentsLink = screen.getByRole("link", { name: /nav.tournaments/i });
+    const placesLink = screen.getByRole("link", { name: /nav.places/i });
     const communityLink = screen.getByRole("link", { name: /nav.community/i });
     const rankingsLink = screen.getByRole("link", { name: /nav.rankings/i });
-    const liveLink = screen.getByRole("link", { name: /nav.live/i });
 
-    expect(tournamentsLink).toHaveAttribute("href", "/tournaments");
+    expect(placesLink).toHaveAttribute("href", "/places");
     expect(communityLink).toHaveAttribute("href", "/community");
     expect(rankingsLink).toHaveAttribute("href", "/rankings");
-    expect(liveLink).toHaveAttribute("href", "/live");
   });
 });
