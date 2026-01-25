@@ -52,16 +52,18 @@ describe("EquipmentPage", () => {
   it("renders the page title and description", () => {
     render(<EquipmentPage />);
 
-    expect(screen.getByText(/탁구 장비 가이드/i)).toBeInTheDocument();
-    expect(screen.getByText(/나에게 맞는 장비를 찾아보세요/i)).toBeInTheDocument();
+    // Page title contains 탁구 장비
+    expect(screen.getByText(/탁구 장비/)).toBeInTheDocument();
+    // Badge text shows 장비 가이드 (may appear multiple times)
+    expect(screen.getAllByText(/장비 가이드/).length).toBeGreaterThanOrEqual(1);
   });
 
-  it("renders the three main tabs", () => {
+  it("renders the four main tabs", () => {
     render(<EquipmentPage />);
 
-    // Tabs have emojis, so use role="tab" to find them specifically
+    // Tabs: 구매처, 추천 조합, 장비 검색, 비교
     const tabs = screen.getAllByRole("tab");
-    expect(tabs.length).toBe(3);
+    expect(tabs.length).toBe(4);
   });
 
   it("renders level badges in recommended combos", () => {

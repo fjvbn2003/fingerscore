@@ -20,6 +20,7 @@ import {
   GraduationCap,
   UserPlus,
   Tag,
+  Youtube,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
@@ -34,17 +35,16 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/auth-context";
-import { NotificationDropdown } from "@/components/notification/notification-dropdown";
+import { NotificationDropdown } from "@/components/notifications";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const navigationItems = [
   { key: "places", href: "/places", icon: MapPin, color: "text-orange-400" },
   { key: "equipment", href: "/equipment", icon: Package, color: "text-cyan-400" },
   { key: "lessons", href: "/lessons", icon: GraduationCap, color: "text-pink-400" },
+  { key: "videos", href: "/videos", icon: Youtube, color: "text-red-400" },
   { key: "matching", href: "/matching", icon: UserPlus, color: "text-violet-400" },
-  { key: "market", href: "/market", icon: Tag, color: "text-amber-400" },
   { key: "community", href: "/community", icon: Users, color: "text-blue-400" },
-  { key: "rankings", href: "/rankings", icon: BarChart3, color: "text-emerald-400" },
 ];
 
 export function Header() {

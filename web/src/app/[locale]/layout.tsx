@@ -7,6 +7,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { Header, Footer } from "@/components/layout";
 import { AuthProvider } from "@/contexts/auth-context";
 import { ThemeProvider } from "@/contexts/theme-context";
+import { NotificationProvider } from "@/contexts/notification-context";
+import { FloatingQuickMatch } from "@/components/quick-match";
 import { routing } from "@/i18n/routing";
 import "../globals.css";
 
@@ -63,10 +65,13 @@ export default async function LocaleLayout({ children, params }: Props) {
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider>
             <AuthProvider>
-              <Header />
-              <main className="flex-1">{children}</main>
-              <Footer />
-              <Toaster richColors position="top-center" />
+              <NotificationProvider>
+                <Header />
+                <main className="flex-1">{children}</main>
+                <Footer />
+                <FloatingQuickMatch />
+                <Toaster richColors position="top-center" />
+              </NotificationProvider>
             </AuthProvider>
           </ThemeProvider>
         </NextIntlClientProvider>

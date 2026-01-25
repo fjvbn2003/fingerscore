@@ -22,13 +22,13 @@ describe("Header", () => {
   it("renders navigation links", () => {
     render(<Header />);
     // Using translation keys since we mock useTranslations
+    // Updated nav items: places, equipment, lessons, videos, matching, community
     expect(screen.getByText("nav.places")).toBeInTheDocument();
     expect(screen.getByText("nav.equipment")).toBeInTheDocument();
     expect(screen.getByText("nav.lessons")).toBeInTheDocument();
+    expect(screen.getByText("nav.videos")).toBeInTheDocument();
     expect(screen.getByText("nav.matching")).toBeInTheDocument();
-    expect(screen.getByText("nav.market")).toBeInTheDocument();
     expect(screen.getByText("nav.community")).toBeInTheDocument();
-    expect(screen.getByText("nav.rankings")).toBeInTheDocument();
   });
 
   it("renders auth buttons when not logged in", () => {
@@ -46,10 +46,10 @@ describe("Header", () => {
 
     const placesLink = screen.getByRole("link", { name: /nav.places/i });
     const communityLink = screen.getByRole("link", { name: /nav.community/i });
-    const rankingsLink = screen.getByRole("link", { name: /nav.rankings/i });
+    const videosLink = screen.getByRole("link", { name: /nav.videos/i });
 
     expect(placesLink).toHaveAttribute("href", "/places");
     expect(communityLink).toHaveAttribute("href", "/community");
-    expect(rankingsLink).toHaveAttribute("href", "/rankings");
+    expect(videosLink).toHaveAttribute("href", "/videos");
   });
 });
